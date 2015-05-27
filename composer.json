@@ -4,6 +4,7 @@
     "version": "0.1",
     "description": "A simple PHP JIRA REST client",
     "keywords": ["jira", "rest", "api", "client"],
+    "license": "MIT",
     "require": {
         "guzzlehttp/guzzle": "~5.0"
     },
