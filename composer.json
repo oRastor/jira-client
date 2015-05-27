@@ -1,6 +1,8 @@
 {
     "name": "rastor/jira-client",
     "type": "library",
+    "description": "A simple PHP JIRA REST client",
+    "keywords": ["jira", "rest", "api", "client"],
     "require": {
         "guzzlehttp/guzzle": "~5.0"
     },
