@@ -3,6 +3,7 @@
 namespace JiraClient\Resource;
 
 use JiraClient\JiraClient,
+    JiraClient\Resource\UserResource,
     JiraClient\Exception\JiraException;
 
 /**
@@ -33,9 +34,87 @@ class Issue extends AbstractResource
 
     /**
      *
-     * @var \JiraClient\Resource\IssueFieldsResource 
+     * @var string
      */
-    protected $fields;
+    protected $summary;
+
+    /**
+     *
+     * @var string
+     */
+    protected $description;
+
+    /**
+     *
+     * @var IssueTypeResource
+     */
+    protected $issueType;
+
+    /**
+     *
+     * @var UserResource
+     */
+    protected $creator;
+    
+    /**
+     *
+     * @var UserResource
+     */
+    protected $reporter;
+
+    /**
+     *
+     * @var UserResource
+     */
+    protected $assignee;
+    
+    /**
+     *
+     * @var WatchesResource
+     */
+    protected $watches;
+
+    /**
+     *
+     * @var ProjectResource
+     */
+    protected $project;
+
+    /**
+     *
+     * @var array
+     */
+    protected $labels;
+
+    /**
+     *
+     * @var array
+     */
+    protected $attachments;
+
+    /**
+     *
+     * @var PriorityResource
+     */
+    protected $priority;
+
+    /**
+     *
+     * @var \DateTime
+     */
+    protected $lastViewed;
+
+    /**
+     *
+     * @var \DateTime
+     */
+    protected $created;
+
+    /**
+     *
+     * @var \DateTime
+     */
+    protected $updated;
 
     /**
      *
@@ -69,27 +148,191 @@ class Issue extends AbstractResource
 
     /**
      * 
-     * @return \JiraClient\Resource\IssueFieldsResource
+     * @return string
      */
-    public function getFields()
+    public function getSummary()
     {
-        return $this->fields;
+        return $this->summary;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * 
+     * @return IssueTypeResource
+     */
+    public function getIssueType()
+    {
+        return $this->issueType;
+    }
+
+    /**
+     * 
+     * @return UserResource
+     */
+    public function getCreator()
+    {
+        return $this->creator;
+    }
+    
+    /**
+     * 
+     * @return UserResource
+     */
+    public function getReporter()
+    {
+        return $this->reporter;
+    }
+
+    /**
+     * 
+     * @return UserResource
+     */
+    public function getAssignee()
+    {
+        return $this->assignee;
+    }
+    
+    /**
+     * 
+     * @return WatchesResource
+     */
+    public function getWatches()
+    {
+        return $this->watches;
+    }
+
+    /**
+     * 
+     * @return ProjectResource
+     */
+    public function getProject()
+    {
+        return $this->project;
+    }
+
+    /**
+     * 
+     * @return array
+     */
+    public function getLabels()
+    {
+        return $this->labels;
+    }
+
+    /**
+     * 
+     * @return array
+     */
+    public function getAttachments()
+    {
+        return $this->attachments;
+    }
+
+    /**
+     * 
+     * @return PriorityResource
+     */
+    public function getPriority()
+    {
+        return $this->priority;
+    }
+
+    /**
+     * 
+     * @return \DateTime
+     */
+    public function getLastViewed()
+    {
+        return $this->lastViewed;
+    }
+
+    /**
+     * 
+     * @return \DateTime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * 
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
     }
 
     public function getObjectMappings()
     {
         return array(
+            'id' => array(
+                '_type' => 'integer'
+            ),
+            'key' => array(
+                '_type' => 'string'
+            ),
             'fields' => array(
-                'result' => 'object',
-                'className' => '\JiraClient\Resource\IssueFieldsResource'
+                'summary' => array(
+                    '_type' => 'string'
+                ),
+                'description' => array(
+                    '_type' => 'string'
+                ),
+                'issuetype' => array(
+                    '_type' => 'issuetype',
+                    '_property' => 'issueType'
+                ),
+                'creator' => array(
+                    '_type' => 'user'
+                ),
+                'reporter' => array(
+                    '_type' => 'user'
+                ),
+                'assignee' => array(
+                    '_type' => 'user'
+                ),
+                'watches' => array(
+                    '_type' => 'watches'
+                ),
+                'project' => array(
+                    '_type' => 'project'
+                ),
+                'labels' => array(
+                    '_type' => 'array',
+                    '_itemType' => 'string'
+                ),
+                'attachment' => array(
+                    '_type' => 'array',
+                    '_itemType' => 'attachment',
+                    '_property' => 'attachments'
+                ),
+                'priority' => array(
+                    '_type' => 'priority'
+                ),
+//                'comments' => array(
+//                    '_type' => 'array',
+//                    '_itemType' => 'comment'
+//                ),
+                'lastViewed' => array(
+                    '_type' => 'date'
+                ),
+                'created' => array(
+                    '_type' => 'date'
+                ),
+                'updated' => array(
+                    '_type' => 'date'
+                )
             )
-        );
-    }
-
-    public function getSaveData()
-    {
-        return array(
-            'fields' => $this->getFields()->getSaveData()
         );
     }
 

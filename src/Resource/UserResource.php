@@ -3,11 +3,11 @@
 namespace JiraClient\Resource;
 
 /**
- * Description of AuthorResource
+ * Description of UserResource
  *
  * @author rastor
  */
-class AuthorResource extends AbstractResource
+class UserResource extends AbstractResource
 {
 
     /**
@@ -88,54 +88,41 @@ class AuthorResource extends AbstractResource
      *
      * @return string
      */
-    public function getCreated()
+    public function getDisplayName()
     {
-        return $this->created;
+        return $this->displayName;
     }
 
     /**
      *
-     * @return string
+     * @return boolean
      *
      */
-    public function getId()
+    public function getActive()
     {
-        return $this->id;
-    }
-
-    /**
-     *
-     * @return string
-     *
-     */
-    public function getRoleLevel()
-    {
-        return $this->roleLevel;
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public function getUpdateAuthor()
-    {
-        return $this->updateAuthor;
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
+        return $this->active;
     }
 
     public function getObjectMappings()
     {
         return array(
+            'self' => array(
+                '_type' => 'string'
+            ),
+            'name' => array(
+                '_type' => 'string'
+            ),
+            'emailAddress' => array(
+                '_type' => 'string'
+            ),
             'avatarUrls' => array(
-                'result' => 'assoc'
+                '_type' => 'assoc'
+            ),
+            'displayName' => array(
+                '_type' => 'string'
+            ),
+            'active' => array(
+                '_type' => 'boolean'
             )
         );
     }

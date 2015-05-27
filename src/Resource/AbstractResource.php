@@ -2,7 +2,8 @@
 
 namespace JiraClient\Resource;
 
-use JiraClient\JiraClient;
+use JiraClient\JiraClient,
+    JiraClient\Exception\JiraException;
 
 /**
  * Description of AbstractResource
@@ -18,7 +19,7 @@ class AbstractResource
      */
     protected $client;
 
-    public function __construct(JiraClient $client, $data = null)
+    public final function __construct(JiraClient $client, $data = null)
     {
         $this->client = $client;
 
@@ -26,78 +27,98 @@ class AbstractResource
             return;
         }
 
-        if (is_object($data)) {
-            $data = (array) $data;
-        }
-
         if (!is_array($data)) {
-            // error
+            throw new JiraException("Data expects an array value");
         }
 
-        $mappings = $this->getObjectMappings();
-        foreach ($data as $key => $value) {
-            if (property_exists($this, $key)) {
-                $this->setPropery($key, $value, $mappings);
+        $this->mappingDeserialize($this->getObjectMappings(), $data);
+        $this->deserialize($data);
+    }
+
+    private final function mappingDeserialize($mapping, $data)
+    {
+        foreach ($mapping as $key => $value) {
+            if (isset($data[$key])) {
+                if (isset($value['_type'])) {
+                    $propertyName = isset($value['_property']) ? $value['_property'] : $key;
+
+                    if (property_exists($this, $propertyName)) {
+                        if ($value['_type'] === 'array') {
+                            $this->{$propertyName} = $this->deserializeArrayValue($value['_itemType'], $data[$key]);
+                        } else {
+                            $this->{$propertyName} = $this->deserializeValue($value['_type'], $data[$key]);
+                        }
+                    }
+                } else {
+                    $this->mappingDeserialize($value, $data[$key]);
+                }
             }
         }
     }
 
-    private function setPropery($key, $value, $mappings)
+    protected function deserialize($data)
     {
-        if (!isset($mappings[$key])) {
-            $this->{$key} = $value;
-            return;
-        }
-
-        switch ($mappings[$key]['result']) {
-            case 'object':
-                if ($value === null) {
-                    $this->{$key} = null;
-                } else {
-                    $className = $mappings[$key]['className'];
-                    $this->{$key} = new $className($this->client, $value);
-                }
-                break;
-
-            case 'array':
-                if ($value === null) {
-                    $this->{$key} = array();
-                } else {
-                    $className = $mappings[$key]['className'];
-                    $this->{$key} = $this->buildList((array) $value, $className);
-                }
-                break;
-
-            case 'assoc':
-                if ($value === null) {
-                    $this->{$key} = array();
-                } else {
-                    $this->{$key} = (array) $value;
-                }
-                break;
-
-            default:
-                //error: invalid mapping record
-                break;
-        }
+        
     }
 
-    public static function buildList(array $data, $className = null)
+    private function deserializeArrayValue($type, $data)
     {
-        if ($className === null) {
-            $className = get_called_class();
+        $result = array();
+
+        foreach ($data as $value) {
+            $result[] = $this->deserializeValue($type, $value);
         }
 
-        $list = array();
-        foreach ($data as $object) {
-            $list[] = new $className($object);
-        }
-        return $list;
+        return $result;
     }
 
-    public function getSaveData()
+    private function deserializeValue($type, $data)
     {
-        return array();
+        if ($type == 'string') {
+            return $data;
+        }
+
+        if ($type == 'integer') {
+            return $data;
+        }
+
+        if ($type == 'assoc') {
+            return $data;
+        }
+
+        if ($type == 'boolean') {
+            return $data;
+        }
+
+        if ($type == 'date') {
+            return new \DateTime($data);
+        }
+
+        if ($type == 'user') {
+            return new UserResource($this->client, $data);
+        }
+
+        if ($type == 'project') {
+            return new ProjectResource($this->client, $data);
+        }
+
+        if ($type == 'attachment') {
+            return new AttachmentResource($this->client, $data);
+        }
+        
+        if ($type == 'priority') {
+            return new PriorityResource($this->client, $data);
+        }
+        
+        if ($type == 'issuetype') {
+            return new IssueTypeResource($this->client, $data);
+        }
+        
+        if ($type == 'watches') {
+            return new WatchesResource($this->client, $data);
+        }
+
+        return null;
     }
 
     public function getObjectMappings()
