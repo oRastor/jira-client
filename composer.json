@@ -1,6 +1,7 @@
 {
     "name": "rastor/jira-client",
     "type": "library",
+    "version": "0.1",
     "description": "A simple PHP JIRA REST client",
     "keywords": ["jira", "rest", "api", "client"],
     "require": {
