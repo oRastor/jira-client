@@ -3,11 +3,11 @@
 namespace JiraClient\Resource;
 
 /**
- * Description of PriorityResource
+ * Description of IssueType
  *
  * @author rastor
  */
-class PriorityResource extends AbstractResource
+class IssueType extends AbstractResource
 {
 
     /**
@@ -26,6 +26,12 @@ class PriorityResource extends AbstractResource
      *
      * @var string
      */
+    protected $description;
+
+    /**
+     *
+     * @var string
+     */
     protected $iconUrl;
 
     /**
@@ -33,6 +39,12 @@ class PriorityResource extends AbstractResource
      * @var string
      */
     protected $name;
+
+    /**
+     *
+     * @var boolean
+     */
+    protected $subtask;
 
     /**
      *
@@ -45,11 +57,22 @@ class PriorityResource extends AbstractResource
 
     /**
      *
-     * @return int
+     * @return integer
+     *
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     *
+     * @return string
+     *
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     /**
@@ -70,6 +93,16 @@ class PriorityResource extends AbstractResource
         return $this->name;
     }
 
+    /**
+     *
+     * @return boolean
+     *
+     */
+    public function getSubtask()
+    {
+        return $this->active;
+    }
+
     public function getObjectMappings()
     {
         return array(
@@ -79,11 +112,17 @@ class PriorityResource extends AbstractResource
             'id' => array(
                 '_type' => 'integer'
             ),
+            'description' => array(
+                '_type' => 'string'
+            ),
             'iconUrl' => array(
                 '_type' => 'string'
             ),
             'name' => array(
                 '_type' => 'string'
+            ),
+            'subtask' => array(
+                '_type' => 'boolean'
             )
         );
     }

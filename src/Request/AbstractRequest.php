@@ -2,8 +2,7 @@
 
 namespace JiraClient\Request;
 
-use JiraClient\JiraClient,
-    JiraClient\Credential;
+use JiraClient\JiraClient;
 
 /**
  * Description of AbstractRequest
@@ -17,5 +16,21 @@ class AbstractRequest
     const METHOD_PUT = 'PUT';
     const METHOD_POST = 'POST';
     const METHOD_DELETE = 'DELETE';
+
+    /**
+     *
+     * @var JiraClient 
+     */
+    protected $client;
+
+    public function __construct(JiraClient $client)
+    {
+        $this->client = $client;
+    }
+
+    public function getClient()
+    {
+        return $this->client;
+    }
 
 }

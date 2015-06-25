@@ -3,11 +3,11 @@
 namespace JiraClient\Resource;
 
 /**
- * Description of AttachmentResource
+ * Description of Attachment
  *
  * @author rastor
  */
-class AttachmentResource extends AbstractResource
+class Attachment extends AbstractResource
 {
 
     /**
@@ -30,7 +30,7 @@ class AttachmentResource extends AbstractResource
 
     /**
      *
-     * @var UserResource
+     * @var User
      */
     protected $author;
 
@@ -93,7 +93,7 @@ class AttachmentResource extends AbstractResource
 
     /**
      *
-     * @var UserResource
+     * @var User
      */
     public function getAuthor()
     {
@@ -161,7 +161,7 @@ class AttachmentResource extends AbstractResource
                 '_type' => 'user'
             ),
             'created' => array(
-                '_type' => 'string'
+                '_type' => 'date'
             ),
             'size' => array(
                 '_type' => 'integer'

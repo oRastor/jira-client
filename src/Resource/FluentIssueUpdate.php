@@ -69,9 +69,23 @@ class FluentIssueUpdate
         return $this;
     }
 
+    public function customField($id, $value)
+    {
+        $this->field(Field::CUSTOM_PREFIX . $id, $value);
+        
+        return $this;
+    }
+
     public function fieldOperation($operation, $name, $value)
     {
         $this->fieldOperations[$name][] = new FieldOperation($operation, $value);
+
+        return $this;
+    }
+
+    public function customFieldOperation($operation, $id, $value)
+    {
+        $this->fieldOperations[Field::CUSTOM_PREFIX . $id][] = new FieldOperation($operation, $value);
 
         return $this;
     }
@@ -81,9 +95,19 @@ class FluentIssueUpdate
         return $this->fieldOperation(FieldOperation::ADD, $name, $value);
     }
 
+    public function customFieldAdd($id, $value)
+    {
+        return $this->fieldOperation(FieldOperation::ADD, Field::CUSTOM_PREFIX . $id, $value);
+    }
+
     public function fieldRemove($name, $value)
     {
         return $this->fieldOperation(FieldOperation::REMOVE, $name, $value);
+    }
+
+    public function customFieldRemove($id, $value)
+    {
+        return $this->fieldOperation(FieldOperation::REMOVE, Field::CUSTOM_PREFIX . $id, $value);
     }
 
 }

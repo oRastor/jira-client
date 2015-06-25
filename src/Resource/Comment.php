@@ -3,11 +3,11 @@
 namespace JiraClient\Resource;
 
 /**
- * Description of CommentResource
+ * Description of Comment
  *
  * @author rastor
  */
-class CommentResource extends AbstractResource
+class Comment extends AbstractResource
 {
 
     /**
@@ -51,12 +51,6 @@ class CommentResource extends AbstractResource
      * @var string
      */
     protected $self;
-
-    /**
-     *
-     * @var \JiraClient\Resource\VisibilityResource
-     */
-    protected $visibility;
 
     /**
      *
@@ -124,61 +118,29 @@ class CommentResource extends AbstractResource
         return $this->self;
     }
 
-    /**
-     * 
-     * @return \JiraClient\Resource\VisibilityResource
-     */
-    public function getVisibility()
-    {   
-        return $this->visibility;
-    }
-
-    /**
-     *
-     * @param string $body
-     *
-     * @return CommentResource
-     */
-    public function setBody($body)
-    {
-        $this->body = $body;
-        return $this;
-    }
-
-    /**
-     * 
-     * @param \JiraClient\Resource\VisibilityResource $visibility
-     * @return \JiraClient\Resource\CommentResource
-     */
-    public function setVisibility($visibility)
-    {        
-        $this->visibility = $visibility;
-        
-        return $this;
-    }
-
     public function getObjectMappings()
     {
         return array(
+            'self' => array(
+                '_type' => 'string'
+            ),
+            'id' => array(
+                '_type' => 'integer'
+            ),
             'author' => array(
-                'result' => 'object',
-                'className' => '\JiraClient\Resource\AuthorResource'
+                '_type' => 'user'
+            ),
+            'body' => array(
+                '_type' => 'string'
             ),
             'updateAuthor' => array(
-                'result' => 'object',
-                'className' => '\JiraClient\Resource\AuthorResource'
+                '_type' => 'user'
             ),
             'created' => array(
-                'result' => 'object',
-                'className' => '\DateTime'
+                '_type' => 'date'
             ),
             'updated' => array(
-                'result' => 'object',
-                'className' => '\DateTime'
-            ),
-            'visibility' => array(
-                'result' => 'object',
-                'className' => '\JiraClient\Resource\VisibilityResource'
+                '_type' => 'date'
             )
         );
     }

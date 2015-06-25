@@ -3,11 +3,11 @@
 namespace JiraClient\Resource;
 
 /**
- * Description of UserResource
+ * Description of User
  *
  * @author rastor
  */
-class IssueTypeResource extends AbstractResource
+class User extends AbstractResource
 {
 
     /**
@@ -18,33 +18,33 @@ class IssueTypeResource extends AbstractResource
 
     /**
      *
-     * @var int
-     */
-    protected $id;
-
-    /**
-     *
-     * @var string
-     */
-    protected $description;
-
-    /**
-     *
-     * @var string
-     */
-    protected $iconUrl;
-
-    /**
-     *
      * @var string
      */
     protected $name;
 
     /**
      *
-     * @var boolean
+     * @var string
      */
-    protected $subtask;
+    protected $emailAddress;
+
+    /**
+     *
+     * @var array
+     */
+    protected $avatarUrls;
+
+    /**
+     *
+     * @var string
+     */
+    protected $displayName;
+
+    /**
+     *
+     * @var string
+     */
+    protected $active;
 
     /**
      *
@@ -57,36 +57,8 @@ class IssueTypeResource extends AbstractResource
 
     /**
      *
-     * @return integer
-     *
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     *
      * @return string
      *
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public function getIconUrl()
-    {
-        return $this->iconUrl;
-    }
-
-    /**
-     *
-     * @return string
      */
     public function getName()
     {
@@ -95,10 +67,38 @@ class IssueTypeResource extends AbstractResource
 
     /**
      *
+     * @return string
+     *
+     */
+    public function getEmailAddress()
+    {
+        return $this->emailAddress;
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function getAvatarsUrls()
+    {
+        return $this->avatarUrls;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getDisplayName()
+    {
+        return $this->displayName;
+    }
+
+    /**
+     *
      * @return boolean
      *
      */
-    public function getSubtask()
+    public function getActive()
     {
         return $this->active;
     }
@@ -109,19 +109,19 @@ class IssueTypeResource extends AbstractResource
             'self' => array(
                 '_type' => 'string'
             ),
-            'id' => array(
-                '_type' => 'integer'
-            ),
-            'description' => array(
-                '_type' => 'string'
-            ),
-            'iconUrl' => array(
-                '_type' => 'string'
-            ),
             'name' => array(
                 '_type' => 'string'
             ),
-            'subtask' => array(
+            'emailAddress' => array(
+                '_type' => 'string'
+            ),
+            'avatarUrls' => array(
+                '_type' => 'assoc'
+            ),
+            'displayName' => array(
+                '_type' => 'string'
+            ),
+            'active' => array(
                 '_type' => 'boolean'
             )
         );

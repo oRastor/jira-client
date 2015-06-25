@@ -12,7 +12,9 @@ use JiraClient\JiraClient,
  */
 class AbstractResource
 {
-
+    
+    const COMMENT = 'comment';
+    
     /**
      *
      * @var JiraClient 
@@ -43,10 +45,12 @@ class AbstractResource
                     $propertyName = isset($value['_property']) ? $value['_property'] : $key;
 
                     if (property_exists($this, $propertyName)) {
-                        if ($value['_type'] === 'array') {
-                            $this->{$propertyName} = $this->deserializeArrayValue($value['_itemType'], $data[$key]);
+                        if ($value['_type'] === 'list') {
+                            $this->{$propertyName} = self::deserializeListValue($value['_itemType'], $value['_listKey'], $data[$key], $this->client);
+                        } else if ($value['_type'] === 'array') {
+                            $this->{$propertyName} = self::deserializeArrayValue($value['_itemType'], $data[$key], $this->client);
                         } else {
-                            $this->{$propertyName} = $this->deserializeValue($value['_type'], $data[$key]);
+                            $this->{$propertyName} = self::deserializeValue($value['_type'], $data[$key], $this->client);
                         }
                     }
                 } else {
@@ -61,18 +65,40 @@ class AbstractResource
         
     }
 
-    private function deserializeArrayValue($type, $data)
+    protected static function deserializeArrayValue($type, $data, $client)
     {
         $result = array();
+        
+        if (!is_array($data)) {
+            return array();
+        }
 
         foreach ($data as $value) {
-            $result[] = $this->deserializeValue($type, $value);
+            $result[] = self::deserializeValue($type, $value, $client);
         }
 
         return $result;
     }
 
-    private function deserializeValue($type, $data)
+    /**
+     * 
+     * @param type $type
+     * @param type $key
+     * @param type $data
+     * @return \JiraClient\Resource\ResourcesList
+     */
+    public static function deserializeListValue($type, $key, $data, $client)
+    {
+        $start = (isset($data['startAt'])) ? $data['startAt'] : 0;
+        $max = (isset($data['maxResults'])) ? $data['maxResults'] : 0;
+        $total = (isset($data['total'])) ? $data['total'] : 0;
+
+        $array = self::deserializeArrayValue($type, $data[$key], $client);
+
+        return new ResourcesList($start, $max, $total, $array, $client);
+    }
+
+    protected static function deserializeValue($type, $data, $client)
     {
         if ($type == 'string') {
             return $data;
@@ -93,29 +119,49 @@ class AbstractResource
         if ($type == 'date') {
             return new \DateTime($data);
         }
+        
+        if ($type == 'schema') {
+            return new FieldMetadataSchema($client, $data);
+        }
+        
+        if ($type == 'customfieldoption') {
+            return new CustomFieldOption($client, $data);
+        }
+
+        if ($type == 'issue') {
+            return new Issue($client, $data);
+        }
+
+        if ($type == 'comment') {
+            return new Comment($client, $data);
+        }
 
         if ($type == 'user') {
-            return new UserResource($this->client, $data);
+            return new User($client, $data);
         }
 
         if ($type == 'project') {
-            return new ProjectResource($this->client, $data);
+            return new Project($client, $data);
         }
 
         if ($type == 'attachment') {
-            return new AttachmentResource($this->client, $data);
+            return new Attachment($client, $data);
         }
-        
+
         if ($type == 'priority') {
-            return new PriorityResource($this->client, $data);
+            return new Priority($client, $data);
         }
-        
+
         if ($type == 'issuetype') {
-            return new IssueTypeResource($this->client, $data);
+            return new IssueType($client, $data);
         }
-        
+
         if ($type == 'watches') {
-            return new WatchesResource($this->client, $data);
+            return new Watches($client, $data);
+        }
+
+        if ($type == 'votes') {
+            return new Votes($client, $data);
         }
 
         return null;

@@ -3,7 +3,7 @@
 namespace JiraClient;
 
 use JiraClient\Client\AbstractClient,
-    JiraClient\Request\IssueRequest;
+    JiraClient\Request\Issue;
 
 /**
  * Description of JiraClient
@@ -17,6 +17,12 @@ class JiraClient
 
     private $credential;
     private $endpoint;
+    
+    /**
+     *
+     * @var Issue 
+     */
+    private $issueRequest;
 
     /**
      *
@@ -33,11 +39,15 @@ class JiraClient
 
     /**
      * 
-     * @return IssueRequest
+     * @return Issue
      */
     public function issue()
     {
-        return new IssueRequest($this, $this->credential);
+        if ($this->issueRequest === null) {
+            $this->issueRequest = new Request\Issue($this);
+        }
+        
+        return $this->issueRequest;
     }
 
     public function call($method, $path, $data = array())

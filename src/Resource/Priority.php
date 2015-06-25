@@ -3,11 +3,11 @@
 namespace JiraClient\Resource;
 
 /**
- * Description of ProjectResource
+ * Description of Priority
  *
  * @author rastor
  */
-class ProjectResource extends AbstractResource
+class Priority extends AbstractResource
 {
 
     /**
@@ -26,19 +26,13 @@ class ProjectResource extends AbstractResource
      *
      * @var string
      */
-    protected $key;
+    protected $iconUrl;
 
     /**
      *
      * @var string
      */
     protected $name;
-
-    /**
-     *
-     * @var array
-     */
-    protected $avatarUrls;
 
     /**
      *
@@ -62,9 +56,9 @@ class ProjectResource extends AbstractResource
      *
      * @return string
      */
-    public function getKey()
+    public function getIconUrl()
     {
-        return $this->key;
+        return $this->iconUrl;
     }
 
     /**
@@ -76,15 +70,6 @@ class ProjectResource extends AbstractResource
         return $this->name;
     }
 
-    /**
-     *
-     * @return array
-     */
-    public function getAvatarsUrls()
-    {
-        return $this->avatarUrls;
-    }
-
     public function getObjectMappings()
     {
         return array(
@@ -94,14 +79,11 @@ class ProjectResource extends AbstractResource
             'id' => array(
                 '_type' => 'integer'
             ),
-            'key' => array(
+            'iconUrl' => array(
                 '_type' => 'string'
             ),
             'name' => array(
                 '_type' => 'string'
-            ),
-            'avatarUrls' => array(
-                '_type' => 'assoc'
             )
         );
     }

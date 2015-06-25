@@ -3,11 +3,11 @@
 namespace JiraClient\Resource;
 
 /**
- * Description of WatchesResource
+ * Description of Votes
  *
  * @author rastor
  */
-class WatchesResource extends AbstractResource
+class Votes extends AbstractResource
 {
 
     /**
@@ -18,15 +18,15 @@ class WatchesResource extends AbstractResource
 
     /**
      *
-     * @var integer
+     * @var int
      */
-    protected $watchCount;
+    protected $votes;
 
     /**
      *
-     * @var boolean
+     * @var bool
      */
-    protected $isWatching;
+    protected $hasVoted;
 
     /**
      *
@@ -39,20 +39,22 @@ class WatchesResource extends AbstractResource
 
     /**
      *
-     * @return integer
+     * @return int
+     *
      */
-    public function getWatchCount()
+    public function getVotes()
     {
-        return $this->watchCount;
+        return $this->votes;
     }
 
     /**
      *
-     * @return string
+     * @return bool
+     *
      */
-    public function getIsWatching()
+    public function hasVoted()
     {
-        return $this->isWatching;
+        return $this->hasVoted;
     }
 
     public function getObjectMappings()
@@ -61,10 +63,10 @@ class WatchesResource extends AbstractResource
             'self' => array(
                 '_type' => 'string'
             ),
-            'watchCount' => array(
+            'votes' => array(
                 '_type' => 'integer'
             ),
-            'isWatching' => array(
+            'hasVoted' => array(
                 '_type' => 'boolean'
             )
         );

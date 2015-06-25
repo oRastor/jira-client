@@ -38,7 +38,7 @@ class FluentIssueCreate
 
         foreach ($required as $name) {
             if (!isset($this->fields[$name])) {
-                throw new JiraException("Field '{$name}' is required!");
+                throw new JiraException("Field '{$name}' is required");
             }
         }
 
@@ -51,7 +51,7 @@ class FluentIssueCreate
         } catch (Exception $e) {
             throw new JiraException("Failed to create issue", $e);
         }
-        
+
         return Issue::getIssue($this->client, $result['id'], $includedFields);
     }
 
@@ -60,6 +60,11 @@ class FluentIssueCreate
         $this->fields[$name] = $value;
 
         return $this;
+    }
+
+    public function customField($id, $value)
+    {
+        $this->field(Field::CUSTOM_PREFIX . $id, $value);
     }
 
 }

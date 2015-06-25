@@ -3,7 +3,7 @@
 namespace JiraClient\Resource;
 
 use JiraClient\JiraClient,
-    JiraClient\Resource\UserResource,
+    JiraClient\Resource\User,
     JiraClient\Exception\JiraException;
 
 /**
@@ -46,37 +46,37 @@ class Issue extends AbstractResource
 
     /**
      *
-     * @var IssueTypeResource
+     * @var IssueType
      */
     protected $issueType;
 
     /**
      *
-     * @var UserResource
+     * @var User
      */
     protected $creator;
-    
+
     /**
      *
-     * @var UserResource
+     * @var User
      */
     protected $reporter;
 
     /**
      *
-     * @var UserResource
+     * @var User
      */
     protected $assignee;
-    
+
     /**
      *
-     * @var WatchesResource
+     * @var Watches
      */
     protected $watches;
 
     /**
      *
-     * @var ProjectResource
+     * @var Project
      */
     protected $project;
 
@@ -94,9 +94,21 @@ class Issue extends AbstractResource
 
     /**
      *
-     * @var PriorityResource
+     * @var ResourcesList
+     */
+    protected $comments;
+
+    /**
+     *
+     * @var Priority
      */
     protected $priority;
+
+    /**
+     *
+     * @var Votes
+     */
+    protected $votes;
 
     /**
      *
@@ -115,6 +127,30 @@ class Issue extends AbstractResource
      * @var \DateTime
      */
     protected $updated;
+
+    /**
+     *
+     * @var array
+     */
+    protected $customFields = array();
+
+    /**
+     *
+     * @var array
+     */
+    protected $createMetadata = null;
+
+    /**
+     *
+     * @var array
+     */
+    protected $editMetadata = null;
+
+    /**
+     *
+     * @var array
+     */
+    protected $totalMetadata = null;
 
     /**
      *
@@ -166,7 +202,7 @@ class Issue extends AbstractResource
 
     /**
      * 
-     * @return IssueTypeResource
+     * @return IssueType
      */
     public function getIssueType()
     {
@@ -175,16 +211,16 @@ class Issue extends AbstractResource
 
     /**
      * 
-     * @return UserResource
+     * @return User
      */
     public function getCreator()
     {
         return $this->creator;
     }
-    
+
     /**
      * 
-     * @return UserResource
+     * @return User
      */
     public function getReporter()
     {
@@ -193,16 +229,16 @@ class Issue extends AbstractResource
 
     /**
      * 
-     * @return UserResource
+     * @return User
      */
     public function getAssignee()
     {
         return $this->assignee;
     }
-    
+
     /**
      * 
-     * @return WatchesResource
+     * @return Watches
      */
     public function getWatches()
     {
@@ -211,7 +247,7 @@ class Issue extends AbstractResource
 
     /**
      * 
-     * @return ProjectResource
+     * @return Project
      */
     public function getProject()
     {
@@ -238,11 +274,29 @@ class Issue extends AbstractResource
 
     /**
      * 
-     * @return PriorityResource
+     * @return ResourcesList
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * 
+     * @return Priority
      */
     public function getPriority()
     {
         return $this->priority;
+    }
+
+    /**
+     * 
+     * @return Votes
+     */
+    public function getVotes()
+    {
+        return $this->votes;
     }
 
     /**
@@ -319,10 +373,15 @@ class Issue extends AbstractResource
                 'priority' => array(
                     '_type' => 'priority'
                 ),
-//                'comments' => array(
-//                    '_type' => 'array',
-//                    '_itemType' => 'comment'
-//                ),
+                'votes' => array(
+                    '_type' => 'votes'
+                ),
+                'comment' => array(
+                    '_type' => 'list',
+                    '_itemType' => 'comment',
+                    '_listKey' => 'comments',
+                    '_property' => 'comments'
+                ),
                 'lastViewed' => array(
                     '_type' => 'date'
                 ),
@@ -336,123 +395,132 @@ class Issue extends AbstractResource
         );
     }
 
+    private function getMetadata()
+    {
+        if ($this->totalMetadata !== null) {
+            return $this->totalMetadata;
+        }
+
+        if ($this->createMetadata === null) {
+            $this->createMetadata = $this->client->issue()->getCreateMetadataFields($this->getProject()->getKey(), $this->getIssueType()->getName());
+        }
+
+        if ($this->editMetadata === null) {
+            $this->editMetadata = $this->client->issue()->getEditMetadataFields($this->getProject()->getKey());
+        }
+
+        $this->totalMetadata = array_merge($this->createMetadata, $this->editMetadata);
+
+        return $this->totalMetadata;
+    }
+
+    protected function deserialize($data)
+    {
+        $metadata = $this->getMetadata();
+
+        //process custom fields
+        foreach ($data['fields'] as $key => $value) {
+            if (strpos($key, Field::CUSTOM_PREFIX) !== 0) {
+                continue;
+            }
+
+            $metadata = $this->getFieldMetadata($key);
+            $id = substr($key, strlen(Field::CUSTOM_PREFIX));
+
+            if ($metadata === false) {
+                $this->customFields[$id] = $value;
+                continue;
+            }
+
+            $schema = $metadata->getSchema();
+            if ($schema->getType() === Field::ARRAY_FIELD) {
+                $this->customFields[$id] = self::deserializeArrayValue($schema->getItems(), $value, $this->client);
+            } else {
+                $this->customFields[$id] = self::deserializeValue($schema->getType(), $value, $this->client);
+            }
+        }
+    }
+
+    public function getCustomFieldsNames()
+    {
+        $metadata = $this->getMetadata();
+
+        $result = array();
+
+        foreach (array_keys($this->customFields) as $id) {
+            $result[$id] = $metadata[Field::CUSTOM_PREFIX . $id]->getName();
+        }
+
+        return $result;
+    }
+
+    /**
+     * 
+     * @param string $name
+     * @return FieldMetadata | boolean
+     */
+    public function getFieldMetadata($name)
+    {
+        $metadata = $this->getMetadata();
+
+        if (!isset($metadata[$name])) {
+            return false;
+        }
+
+        return $metadata[$name];
+    }
+
+    /**
+     * 
+     * @param int $id
+     * @return FieldMetadata | boolean
+     */
+    public function getCustomFieldMetadata($id)
+    {
+        return $this->getFieldMetadata(Field::CUSTOM_PREFIX . $id);
+    }
+
+    public function getCustomFieldType($id)
+    {
+        $metadata = $this->getMetadata();
+
+        if (!isset($metadata[Field::CUSTOM_PREFIX . $id])) {
+            return false;
+        }
+
+        return $metadata[Field::CUSTOM_PREFIX . $id]->getSchema()->getType();
+    }
+
+    public function getCustomFieldAllowedValues($id)
+    {
+        $metadata = $this->getMetadata();
+
+        if (!isset($metadata[Field::CUSTOM_PREFIX . $id])) {
+            return false;
+        }
+
+        return $metadata[Field::CUSTOM_PREFIX . $id]->getAllowedValues();
+    }
+
     public function update()
     {
-        $metadata = self::getEditMetadata($this->client, $this->key);
-
-        return new FluentIssueUpdate($this, $metadata);
-    }
-
-    public function addWatcher($login)
-    {
-        $path = "/issue/{$this->getKey()}/watchers";
-
-        try {
-            $this->client->callPost($path, $login);
-        } catch (Exception $e) {
-            throw new JiraException("Failed to add watcher '{$login}' to issue '{$this->getKey()}'", $e);
+        if ($this->editMetadata === null) {
+            $this->editMetadata = $this->client->issue()->getEditMetadataFields($this->getKey());
         }
 
-        return $this;
+        return new FluentIssueUpdate($this, $this->editMetadata);
     }
 
-    public function deleteWatcher($login)
+    public function refresh()
     {
-        $path = "/issue/{$this->getKey()}/watchers?username={$login}";
-
-        try {
-            $this->client->callDelete($path);
-        } catch (Exception $e) {
-            throw new JiraException("Failed to delete watcher '{$login}' to issue '{$this->getKey()}'", $e);
-        }
-
-        return $this;
+        
     }
 
     public function addComment($body, $visibilityType = null, $visibilityName = null)
     {
-        $path = "/issue/{$this->getKey()}/comment";
-
-        $data = array(
-            'body' => $body
-        );
-
-        if ($visibilityType !== null && $visibilityName !== null) {
-            $data['visibility'] = array(
-                'type' => $visibilityType,
-                'value' => $visibilityName
-            );
-        }
-
-        try {
-            $this->client->callPost($path, $data);
-        } catch (Exception $e) {
-            throw new JiraException("Failed to retrieve issue metadata", $e);
-        }
+        $this->client->issue()->addComment($this->getId(), $body, $visibilityType, $visibilityName);
 
         return $this;
-    }
-
-    private static function getEditMetadata(JiraClient $client, $issue)
-    {
-        $path = "/issue/{$issue}/editmeta";
-
-        try {
-            $data = $client->callGet($path)->getData();
-        } catch (Exception $e) {
-            throw new JiraException("Failed to retrieve issue metadata", $e);
-        }
-
-        if (!isset($data['fields'])) {
-            throw new JiraException("Bad metadata!");
-        }
-
-        return $data['fields'];
-    }
-
-    private static function getCreateMetadata(JiraClient $client, $project, $issueType)
-    {
-        $path = "/issue/createmeta?expand=projects.issuetypes.fields&projectKeys={$project}&issuetypeNames={$issueType}";
-
-        try {
-            $data = $client->callGet($path)->getData();
-        } catch (Exception $e) {
-            throw new JiraException("Failed to retrieve issue metadata", $e);
-        }
-
-        if (!isset($data['projects'][0]['issuetypes'][0]['fields'])) {
-            throw new JiraException("Project '$project' and issue type '$issueType' missing from create metadata");
-        }
-
-        return $data['projects'][0]['issuetypes'][0]['fields'];
-    }
-
-    public static function getIssue(JiraClient $client, $issue, $fields = null, $expand = false)
-    {
-        $params = array();
-        if ($fields !== null) {
-            $params['fields'] = $fields;
-        }
-
-        if ($expand) {
-            $params['expand'] = '';
-        }
-
-        $path = "/issue/{$issue}?" . http_build_query($params);
-
-        $result = $client->callGet($path)->getData();
-
-        return new Issue($client, $result);
-    }
-
-    public static function createIssue(JiraClient $client, $project, $issueType)
-    {
-        $metadata = self::getCreateMetadata($client, $project, $issueType);
-
-        $fluentIssueCreate = new FluentIssueCreate($client, $metadata);
-
-        return $fluentIssueCreate->field(Field::PROJECT, $project)
-                        ->field(Field::ISSUE_TYPE, $issueType);
     }
 
 }
