@@ -65,6 +65,8 @@ class FluentIssueCreate
     public function customField($id, $value)
     {
         $this->field(Field::CUSTOM_PREFIX . $id, $value);
+        
+        return $this;
     }
 
 }
