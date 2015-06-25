@@ -359,7 +359,7 @@ class Issue extends AbstractRequest
         //try {
         $data = $this->client->callGet($path)->getData();
 
-        return self::deserializeListValue('issue', 'issues', $data, $this->client);
+        return AbstractResource::deserializeListValue('issue', 'issues', $data, $this->client);
     }
     
     public static function getIssue(JiraClient $client, $issue, $includedFields = null, $expandFields = false)
