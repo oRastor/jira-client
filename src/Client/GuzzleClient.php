@@ -46,7 +46,7 @@ class GuzzleClient
 
         $responseContent = $response->getBody()->getContents();
         
-        $responseData = json_decode($data, true);
+        $responseData = json_decode($responseContent, true);
 
         return new Response($responseData, $response->getStatusCode());
     }
