@@ -100,6 +100,12 @@ class Issue extends AbstractResource
 
     /**
      *
+     * @var \DateTime
+     */
+    protected $dueDate;
+
+    /**
+     *
      * @var Priority
      */
     protected $priority;
@@ -299,6 +305,11 @@ class Issue extends AbstractResource
         return $this->votes;
     }
 
+    public function getDueDate()
+    {
+        return $this->dueDate;
+    }
+
     /**
      * 
      * @return \DateTime
@@ -382,6 +393,10 @@ class Issue extends AbstractResource
                     '_listKey' => 'comments',
                     '_property' => 'comments'
                 ),
+                'duedate' => array(
+                    '_type' => 'date',
+                    '_property' => 'dueDate'
+                ),
                 'lastViewed' => array(
                     '_type' => 'date'
                 ),
@@ -406,7 +421,7 @@ class Issue extends AbstractResource
         }
 
         if ($this->editMetadata === null) {
-            $this->editMetadata = $this->client->issue()->getEditMetadataFields($this->getProject()->getKey());
+            $this->editMetadata = $this->client->issue()->getEditMetadataFields($this->getKey());
         }
 
         $this->totalMetadata = array_merge($this->createMetadata, $this->editMetadata);
@@ -425,6 +440,7 @@ class Issue extends AbstractResource
             }
 
             $metadata = $this->getFieldMetadata($key);
+            
             $id = substr($key, strlen(Field::CUSTOM_PREFIX));
 
             if ($metadata === false) {
@@ -433,10 +449,10 @@ class Issue extends AbstractResource
             }
 
             $schema = $metadata->getSchema();
-            if ($schema->getType() === Field::ARRAY_FIELD) {
+            if ($schema->getType() === Field::ARRAY_TYPE) {
                 $this->customFields[$id] = self::deserializeArrayValue($schema->getItems(), $value, $this->client);
             } else {
-                $this->customFields[$id] = self::deserializeValue($schema->getType(), $value, $this->client);
+                $this->customFields[$id] = self::deserializeValue($schema->getType(), $value, $this->client, $schema->getCustom());
             }
         }
     }
@@ -452,6 +468,15 @@ class Issue extends AbstractResource
         }
 
         return $result;
+    }
+
+    public function getCustomField($id)
+    {
+        if (!isset($this->customFields[$id])) {
+            return null;
+        }
+        
+        return $this->customFields[$id];
     }
 
     /**

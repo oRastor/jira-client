@@ -32,16 +32,21 @@ class GuzzleClient
             'auth' => [$credential->getLogin(), $credential->getPassword()],
             'json' => $data
         ));
-
+        
         try {
             $response = $this->guzzle->send($request);
-        } catch (\Exception $e) {
-            throw new JiraException("Request failed!", $e);
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            if ($e->hasResponse()) {
+                $data = $e->getResponse()->getBody()->getContents();
+                throw new JiraException("Request failed. Response: {$data}", $e);
+            }
+            
+            throw new JiraException("Request failed", $e);
         }
 
-        //file_put_contents('a', $response->getBody()->getContents());
+        $responseContent = $response->getBody()->getContents();
         
-        $responseData = json_decode($response->getBody()->getContents(), true);
+        $responseData = json_decode($data, true);
 
         return new Response($responseData, $response->getStatusCode());
     }

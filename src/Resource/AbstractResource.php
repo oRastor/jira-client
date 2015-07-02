@@ -12,9 +12,7 @@ use JiraClient\JiraClient,
  */
 class AbstractResource
 {
-    
-    const COMMENT = 'comment';
-    
+
     /**
      *
      * @var JiraClient 
@@ -37,25 +35,25 @@ class AbstractResource
         $this->deserialize($data);
     }
 
-    private final function mappingDeserialize($mapping, $data)
-    {
+    private function mappingDeserialize($mapping, $data)
+    {   
         foreach ($mapping as $key => $value) {
-            if (isset($data[$key])) {
-                if (isset($value['_type'])) {
-                    $propertyName = isset($value['_property']) ? $value['_property'] : $key;
+            if (!isset($data[$key])) {
+                $data[$key] = null;
+            }
+            
+            if (isset($value['_type'])) {
+                $propertyName = isset($value['_property']) ? $value['_property'] : $key;
 
-                    if (property_exists($this, $propertyName)) {
-                        if ($value['_type'] === 'list') {
-                            $this->{$propertyName} = self::deserializeListValue($value['_itemType'], $value['_listKey'], $data[$key], $this->client);
-                        } else if ($value['_type'] === 'array') {
-                            $this->{$propertyName} = self::deserializeArrayValue($value['_itemType'], $data[$key], $this->client);
-                        } else {
-                            $this->{$propertyName} = self::deserializeValue($value['_type'], $data[$key], $this->client);
-                        }
-                    }
+                if ($value['_type'] === 'list') {
+                    $this->{$propertyName} = self::deserializeListValue($value['_itemType'], $value['_listKey'], $data[$key], $this->client);
+                } else if ($value['_type'] === 'array') {
+                    $this->{$propertyName} = self::deserializeArrayValue($value['_itemType'], $data[$key], $this->client);
                 } else {
-                    $this->mappingDeserialize($value, $data[$key]);
+                    $this->{$propertyName} = self::deserializeValue($value['_type'], $data[$key], $this->client);
                 }
+            } else {
+                $this->mappingDeserialize($value, $data[$key]);
             }
         }
     }
@@ -68,7 +66,7 @@ class AbstractResource
     protected static function deserializeArrayValue($type, $data, $client)
     {
         $result = array();
-        
+
         if (!is_array($data)) {
             return array();
         }
@@ -117,13 +115,17 @@ class AbstractResource
         }
 
         if ($type == 'date') {
+            if ($data === null) {
+                return null;
+            }
+            
             return new \DateTime($data);
         }
-        
+
         if ($type == 'schema') {
             return new FieldMetadataSchema($client, $data);
         }
-        
+
         if ($type == 'customfieldoption') {
             return new CustomFieldOption($client, $data);
         }

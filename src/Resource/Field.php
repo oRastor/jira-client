@@ -15,7 +15,8 @@ class Field
 
     const STRING = 'string';
     const NUMBER = 'number';
-    const ARRAY_FIELD = 'array';
+    const DATE = 'date';
+    const ARRAY_TYPE = 'array';
     const PROJECT = 'project';
     const ISSUE_TYPE = 'issuetype';
     const ISSUE_LINK = 'issuelink';
@@ -26,13 +27,16 @@ class Field
     const USER = 'user';
     const VERSION = 'version';
     const PRIORITY = 'priority';
+    const DUE_DATE = 'duedate';
+    const ASSIGNEE = 'assigne';
+    const DESCRIPTION = 'description';
     const CUSTOM_PREFIX = 'customfield_';
 
     private static function getSaveArrayValue($name, $value, $metadata)
     {
         $result = array();
-
-        $itemsType = $metadata[$name]['schema']['items'];
+        
+        $itemsType = $metadata[$name]->getSchema()->getItems();
 
         foreach ($value as $item) {
             $operation = null;
@@ -42,7 +46,7 @@ class Field
             if ($item instanceof FieldOperation) {
                 $operation = $item->getName();
 
-                if (!in_array($operation, $metadata[$name]['operations'])) {
+                if (!in_array($operation, $metadata[$name]->getOperations())) {
                     throw new JiraException("Not allowed operation '{$operation}' for '{$name}' field!");
                 }
 
@@ -78,14 +82,26 @@ class Field
         }
 
         if ($metadata[$name]->getSchema()->getType() === null) {
-            throw new JiraException("Field metadata is missing a type");
+            throw new JiraException("Field '{$name}' metadata is missing a type");
         }
 
         $type = $metadata[$name]->getSchema()->getType();
 
-        if ($type == self::NUMBER || $type == self::STRING) {
+        if ($type == self::STRING) {
+            if ($value == null) {
+                $value = '';
+            }
+            
+            if ($metadata[$name]->getSchema()->getCustom() == 'com.atlassian.jira.plugin.system.customfieldtypes:select') {
+                return array(
+                    'value' => (string) $value
+                );
+            }
+
+            return (string) $value;
+        } else if ($type == self::NUMBER) {
             return $value;
-        } else if ($type == self::ARRAY_FIELD) {
+        } else if ($type == self::ARRAY_TYPE) {
             if ($value == null) {
                 $value = array();
             }
@@ -103,6 +119,12 @@ class Field
             return array(
                 'key' => $value
             );
+        } else if ($type == self::DATE) {
+            if ($value == null) {
+                return null;
+            }
+
+            return $value->format('Y-m-d');
         }
 
         throw new JiraException("Field type '{$type}' not supported");

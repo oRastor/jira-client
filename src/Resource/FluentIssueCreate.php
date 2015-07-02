@@ -3,7 +3,7 @@
 namespace JiraClient\Resource;
 
 use JiraClient\JiraClient,
-    JiraClient\Resource\IssueResource,
+    JiraClient\Resource\Issue,
     JiraClient\Exception\JiraException;
 
 /**
@@ -45,14 +45,15 @@ class FluentIssueCreate
         $data = array(
             'fields' => $this->fields
         );
-
+        
         try {
             $result = $this->client->callPost('/issue', $data)->getData();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new JiraException("Failed to create issue", $e);
         }
 
-        return Issue::getIssue($this->client, $result['id'], $includedFields);
+        return $this->client->issue()
+                        ->get($result['id'], $includedFields);
     }
 
     public function field($name, $value)
@@ -65,7 +66,7 @@ class FluentIssueCreate
     public function customField($id, $value)
     {
         $this->field(Field::CUSTOM_PREFIX . $id, $value);
-        
+
         return $this;
     }
 

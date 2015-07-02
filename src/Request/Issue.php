@@ -3,8 +3,10 @@
 namespace JiraClient\Request;
 
 use JiraClient\JiraClient,
+    JiraClient\Resource\Field,
     JiraClient\Resource\AbstractResource,
     JiraClient\Resource\ResourcesList,
+    JiraClient\Resource\FieldMetadata,
     JiraClient\Resource\Comment,
     JiraClient\Resource\FluentIssueCreate;
 
@@ -26,7 +28,7 @@ class Issue extends AbstractRequest
      */
     public function create($projectKey, $issueTypeName)
     {
-        $this->getCreateMetadataFields($projectKey, $issueTypeName);
+        $fieldsMetadata = $this->getCreateMetadataFields($projectKey, $issueTypeName);
 
         $fluentIssueCreate = new FluentIssueCreate($this->client, $fieldsMetadata);
 
@@ -65,7 +67,7 @@ class Issue extends AbstractRequest
     public function getEditMetadataFields($issue)
     {
         $metadata = $this->getEditMetadata($issue);
-        
+
         $fieldsMetadata = array();
         foreach ($metadata['fields'] as $key => $fieldData) {
             $fieldsMetadata[$key] = new FieldMetadata($this->client, $fieldData);
@@ -223,7 +225,7 @@ class Issue extends AbstractRequest
             if (!isset($data['fields'])) {
                 throw new JiraException("Bad metadata");
             }
-            
+
             return $data;
         } catch (Exception $e) {
             throw new JiraException("Failed to retrieve issue metadata", $e);
@@ -361,8 +363,16 @@ class Issue extends AbstractRequest
 
         return AbstractResource::deserializeListValue('issue', 'issues', $data, $this->client);
     }
-    
-    public static function getIssue(JiraClient $client, $issue, $includedFields = null, $expandFields = false)
+
+    /**
+     * Returns a full representation of the issue for the given issue key.
+     * 
+     * @param string|int $issue the issue id or key to update
+     * @param type $includedFields the list of fields to return for the issue. By default, all fields are returned.
+     * @param type $expandFields
+     * @return \JiraClient\Resource\Issue
+     */
+    public function get($issue, $includedFields = null, $expandFields = false)
     {
         $params = array();
         if ($includedFields !== null) {
@@ -375,12 +385,12 @@ class Issue extends AbstractRequest
 
         $path = "/issue/{$issue}?" . http_build_query($params);
 
-        $result = $client->callGet($path)->getData();
+        $result = $this->client->callGet($path)->getData();
 
-        return new Issue($client, $result);
+        return new \JiraClient\Resource\Issue($this->client, $result);
     }
 
-    public function updateIssue($issue, IssueFieldsResource $fields, $expand = false)
+    public function update($issue, IssueFieldsResource $fields, $expand = false)
     {
         $path = '/issue/' . $issue . '?fields=' . $fields . ($expand ? '?expand' : '');
 
@@ -388,7 +398,7 @@ class Issue extends AbstractRequest
 
         $result = $response->getData();
 
-        return new IssueResource($result);
+        return new \JiraClient\Resource\Issue($this->client, $result);
     }
 
     /**
@@ -396,7 +406,7 @@ class Issue extends AbstractRequest
      * @param string $issue id or key of issue
      * @param $deleteSubtasks string a String of true or false indicating that any subtasks should also be deleted. If the issue has no subtasks this parameter is ignored. If the issue has subtasks and this parameter is missing or false, then the issue will not be deleted and an error will be returned.
      */
-    public function deleteIssue($issue, $deleteSubtasks = false)
+    public function delete($issue, $deleteSubtasks = false)
     {
         $params = '';
         if ($deleteSubtasks !== null) {

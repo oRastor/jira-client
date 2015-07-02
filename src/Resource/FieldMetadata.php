@@ -21,7 +21,7 @@ class FieldMetadata extends AbstractResource
      * @var string
      */
     protected $name;
-    
+
     /**
      *
      * @var FieldMetadataSchema
@@ -63,7 +63,7 @@ class FieldMetadata extends AbstractResource
     {
         return $this->schema;
     }
-    
+
     /**
      *
      * @return string
