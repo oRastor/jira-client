@@ -2,8 +2,7 @@
 
 namespace JiraClient\Resource;
 
-use JiraClient\JiraClient,
-    JiraClient\Resource\Issue,
+use JiraClient\Resource\Issue,
     JiraClient\Exception\JiraException;
 
 /**
@@ -38,7 +37,7 @@ class FluentIssueUpdate
         foreach ($this->fields as $name => $value) {
             $this->fields[$name] = Field::getSaveValue($name, $value, $this->updateMetadata);
         }
-
+        
         foreach ($this->fieldOperations as $name => $value) {
             $this->fieldOperations[$name] = Field::getSaveValue($name, $value, $this->updateMetadata);
         }
@@ -52,7 +51,7 @@ class FluentIssueUpdate
         if (count($this->fields)) {
             $data['fields'] = $this->fields;
         }
-
+        
         try {
             $this->issue->getClient()->callPut('/issue/' . $this->issue->getKey(), $data)->getData();
         } catch (Exception $e) {

@@ -37,7 +37,7 @@ class Field
         $result = array();
 
         $itemsType = $metadata[$name]->getSchema()->getItems();
-
+        
         foreach ($value as $item) {
             $operation = null;
             $realValue = null;
@@ -56,25 +56,25 @@ class Field
             }
             
             if (in_array($itemsType, array(self::COMPONENT, self::GROUP, self::USER, self::VERSION))) {
-                $realValue = array(
-                    'name' => $item
+                $realResult = array(
+                    'name' => $realValue
                 );
             } elseif ($itemsType == self::STRING) {
                 if ($metadata[$name]->getSchema()->getCustom() == 'com.atlassian.jira.plugin.system.customfieldtypes:multicheckboxes') {
-                    $realValue = array(
-                        'key' => $item
+                    $realResult = array(
+                        'value' => (string) $realValue
                     );
                 } else {
-                    $realValue = $item;
+                    $realResult = (string) $realValue;
                 }
             }
-
+            
             if ($operation !== null) {
                 array_push($result, array(
-                    $operation => $realValue
+                    $operation => $realResult
                 ));
             } else {
-                array_push($result, $realValue);
+                array_push($result, $realResult);
             }
         }
 
