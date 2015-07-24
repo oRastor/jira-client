@@ -35,7 +35,7 @@ class Field
     private static function getSaveArrayValue($name, $value, $metadata)
     {
         $result = array();
-        
+
         $itemsType = $metadata[$name]->getSchema()->getItems();
 
         foreach ($value as $item) {
@@ -55,12 +55,20 @@ class Field
                 $realValue = $item;
             }
 
+            var_dump($itemsType);
+            
             if (in_array($itemsType, array(self::COMPONENT, self::GROUP, self::USER, self::VERSION))) {
-                $realResult = array(
-                    'name' => $value
+                $realValue = array(
+                    'name' => $item
                 );
             } elseif ($itemsType == self::STRING) {
-                $realResult = $value;
+                if ($metadata[$name]->getSchema()->getCustom() == 'com.atlassian.jira.plugin.system.customfieldtypes:multicheckboxes') {
+                    $realValue = array(
+                        'key' => $item
+                    );
+                } else {
+                    $realValue = $item;
+                }
             }
 
             if ($operation !== null) {
@@ -86,12 +94,12 @@ class Field
         }
 
         $type = $metadata[$name]->getSchema()->getType();
-
+        
         if ($type == self::STRING) {
             if ($value == null) {
                 $value = '';
             }
-            
+
             if ($metadata[$name]->getSchema()->getCustom() == 'com.atlassian.jira.plugin.system.customfieldtypes:select') {
                 return array(
                     'value' => (string) $value
