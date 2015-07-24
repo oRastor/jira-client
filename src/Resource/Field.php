@@ -54,8 +54,6 @@ class Field
             } else {
                 $realValue = $item;
             }
-
-            var_dump($itemsType);
             
             if (in_array($itemsType, array(self::COMPONENT, self::GROUP, self::USER, self::VERSION))) {
                 $realValue = array(
