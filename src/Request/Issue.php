@@ -3,6 +3,7 @@
 namespace JiraClient\Request;
 
 use JiraClient\JiraClient,
+    JiraClient\Exception\JiraException,
     JiraClient\Resource\Field,
     JiraClient\Resource\AbstractResource,
     JiraClient\Resource\ResourcesList,
