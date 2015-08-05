@@ -17,7 +17,7 @@ class JiraClient
 
     private $credential;
     private $endpoint;
-    
+
     /**
      *
      * @var Issue 
@@ -30,11 +30,16 @@ class JiraClient
      */
     private $httpClient;
 
-    public function __construct($endpoint, $login = null, $password = null)
+    public function __construct($endpoint, $login = null, $password = null, \JiraClient\Client\AbstractClient $httpClient = null)
     {
         $this->endpoint = $endpoint . self::ENDPOINT_PATH;
         $this->credential = new Credential($login, $password);
-        $this->httpClient = new Client\GuzzleClient();
+
+        if ($httpClient === null) {
+            $this->httpClient = new Client\GuzzleClient();
+        } else {
+            $this->httpClient = $httpClient;
+        }
     }
 
     /**
@@ -46,7 +51,7 @@ class JiraClient
         if ($this->issueRequest === null) {
             $this->issueRequest = new Request\Issue($this);
         }
-        
+
         return $this->issueRequest;
     }
 
