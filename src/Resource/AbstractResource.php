@@ -63,7 +63,7 @@ class AbstractResource
         
     }
 
-    protected static function deserializeArrayValue($type, $data, $client)
+    public static function deserializeArrayValue($type, $data, $client)
     {
         $result = array();
 
@@ -156,6 +156,18 @@ class AbstractResource
 
         if ($type == 'issuetype') {
             return new IssueType($client, $data);
+        }
+        
+        if ($type == 'status') {
+            return new Status($client, $data);
+        }
+        
+        if ($type == 'statusCategory') {
+            return new StatusCategory($client, $data);
+        }
+        
+        if ($type == 'transition') {
+            return new Transition($client, $data);
         }
 
         if ($type == 'watches') {

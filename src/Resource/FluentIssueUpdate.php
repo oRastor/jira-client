@@ -55,7 +55,7 @@ class FluentIssueUpdate
         try {
             $this->issue->getClient()->callPut('/issue/' . $this->issue->getKey(), $data)->getData();
         } catch (Exception $e) {
-            throw new JiraException("Failed to create issue", $e);
+            throw new JiraException("Failed to update issue", $e);
         }
 
         return $this->issue->getClient()

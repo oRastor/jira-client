@@ -78,6 +78,16 @@ class Issue extends AbstractRequest
     }
 
     /**
+     * 
+     * @param type $issue
+     * @return \JiraClient\Resource\FluentIssueTransition
+     */
+    public function transition($issue)
+    {
+        return new \JiraClient\Resource\FluentIssueTransition($issue);
+    }
+
+    /**
      * Returns all comments for an issue.
      * 
      * @param string $issue
@@ -420,6 +430,26 @@ class Issue extends AbstractRequest
         $result = $response->getData();
 
         return $result;
+    }
+
+    public function getTransitions($issue, $transitionId = null, $expandFields = false)
+    {
+        $params = array();
+        if ($transitionId !== null) {
+            $params['transitionId'] = $transitionId;
+        }
+
+        if ($expandFields) {
+            $params['expand'] = '';
+        }
+
+        $path = "/issue/{$issue}/transitions?" . http_build_query($params);
+
+        $response = $this->client->callGet($path);
+
+        $result = $response->getData();
+
+        return AbstractResource::deserializeArrayValue('transition', $result['transitions'], $this->client);
     }
 
 }

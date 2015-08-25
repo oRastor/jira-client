@@ -52,6 +52,12 @@ class Issue extends AbstractResource
 
     /**
      *
+     * @var Status
+     */
+    protected $status;
+
+    /**
+     *
      * @var User
      */
     protected $creator;
@@ -217,6 +223,15 @@ class Issue extends AbstractResource
 
     /**
      * 
+     * @return Status
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * 
      * @return User
      */
     public function getCreator()
@@ -357,6 +372,10 @@ class Issue extends AbstractResource
                     '_type' => 'issuetype',
                     '_property' => 'issueType'
                 ),
+                'status' => array(
+                    '_type' => 'status',
+                    '_property' => 'status'
+                ),
                 'creator' => array(
                     '_type' => 'user'
                 ),
@@ -440,7 +459,7 @@ class Issue extends AbstractResource
             }
 
             $metadata = $this->getFieldMetadata($key);
-            
+
             $id = substr($key, strlen(Field::CUSTOM_PREFIX));
 
             if ($metadata === false) {
@@ -475,7 +494,7 @@ class Issue extends AbstractResource
         if (!isset($this->customFields[$id])) {
             return null;
         }
-        
+
         return $this->customFields[$id];
     }
 
@@ -534,6 +553,11 @@ class Issue extends AbstractResource
         }
 
         return new FluentIssueUpdate($this, $this->editMetadata);
+    }
+
+    public function transition()
+    {
+        return new FluentIssueTransition($this);
     }
 
     public function refresh()

@@ -48,6 +48,12 @@ try {
     // Get an array of labels.
     $labels = $newIssue->getLabels();
 
+    // Get an array of transitions for issue
+    $transitions = $api->issue()->getTransitions($newIssue->getKey());
+
+    // Executing transitions to change issue status
+    $newIssue->transition()->execute(120);
+
 } catch (\JiraClient\Exception\JiraException $e) {
     // exception processing
 }
