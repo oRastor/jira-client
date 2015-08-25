@@ -2,8 +2,7 @@
 
 namespace JiraClient;
 
-use JiraClient\Client\AbstractClient,
-    JiraClient\Request\Issue;
+use JiraClient\Request\Issue;
 
 /**
  * Description of JiraClient
@@ -26,17 +25,17 @@ class JiraClient
 
     /**
      *
-     * @var AbstractClient
+     * @var \JiraClient\HttpClient\AbstractClient 
      */
     private $httpClient;
 
-    public function __construct($endpoint, $login = null, $password = null, \JiraClient\Client\AbstractClient $httpClient = null)
+    public function __construct($endpoint, $login = null, $password = null, \JiraClient\HttpClient\AbstractClient $httpClient = null)
     {
         $this->endpoint = $endpoint . self::ENDPOINT_PATH;
         $this->credential = new Credential($login, $password);
 
         if ($httpClient === null) {
-            $this->httpClient = new Client\GuzzleClient();
+            $this->httpClient = new HttpClient\GuzzleClient();
         } else {
             $this->httpClient = $httpClient;
         }
@@ -62,22 +61,22 @@ class JiraClient
 
     public function callPost($path, $data = array())
     {
-        return $this->httpClient->sendRequest(Request\AbstractRequest::METHOD_POST, $this->endpoint . $path, $data, $this->credential);
+        return $this->call(Request\AbstractRequest::METHOD_POST, $path, $data);
     }
 
     public function callGet($path, $data = array())
     {
-        return $this->httpClient->sendRequest(Request\AbstractRequest::METHOD_GET, $this->endpoint . $path, $data, $this->credential);
+        return $this->call(Request\AbstractRequest::METHOD_GET, $path, $data);
     }
 
     public function callPut($path, $data = array())
     {
-        return $this->httpClient->sendRequest(Request\AbstractRequest::METHOD_PUT, $this->endpoint . $path, $data, $this->credential);
+        return $this->call(Request\AbstractRequest::METHOD_PUT, $path, $data);
     }
 
     public function callDelete($path, $data = array())
     {
-        return $this->httpClient->sendRequest(Request\AbstractRequest::METHOD_DELETE, $this->endpoint . $path, $data, $this->credential);
+        return $this->call(Request\AbstractRequest::METHOD_DELETE, $path, $data);
     }
 
 }

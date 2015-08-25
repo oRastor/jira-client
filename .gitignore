@@ -1,4 +1,5 @@
-vendor
-nbproject
+reports/
+vendor/
+nbproject/
 index.php
 a
