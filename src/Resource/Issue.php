@@ -469,7 +469,11 @@ class Issue extends AbstractResource
 
             $schema = $metadata->getSchema();
             if ($schema->getType() === Field::ARRAY_TYPE) {
-                $this->customFields[$id] = self::deserializeArrayValue($schema->getItems(), $value, $this->client);
+                if ($schema->getCustom() == 'com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect') {
+                    $this->customFields[$id] = self::deserializeValue('customFieldNestedValue', $value, $this->client);
+                } else {
+                    $this->customFields[$id] = self::deserializeArrayValue($schema->getItems(), $value, $this->client);
+                }
             } else {
                 $this->customFields[$id] = self::deserializeValue($schema->getType(), $value, $this->client, $schema->getCustom());
             }

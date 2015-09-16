@@ -177,6 +177,14 @@ class AbstractResource
         if ($type == 'votes') {
             return new Votes($client, $data);
         }
+        
+        if ($type == 'customFieldNestedValue') {
+            if ($data === null) {
+                return null;
+            }
+            
+            return new CustomFieldNestedValue($client, $data);
+        }
 
         return null;
     }
