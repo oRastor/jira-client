@@ -41,7 +41,7 @@ class Issue extends AbstractRequest
      * 
      * @param string $projectKey
      * @param string $issueTypeName
-     * @return array
+     * @return JiraClient\Resource\FieldMetadata[]
      * @throws JiraException
      */
     public function getCreateMetadataFields($projectKey, $issueTypeName)

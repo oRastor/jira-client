@@ -115,7 +115,11 @@ class Field
             if (!is_array($value)) {
                 throw new JiraException("Field expects an array value");
             }
-
+            
+            if ($metadata[$name]->getSchema()->getCustom() == 'com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect') {
+                return $value;
+            }
+            
             return self::getSaveArrayValue($name, $value, $metadata);
         } else if (in_array($type, array(self::ISSUE_TYPE, self::PRIORITY, self::USER))) {
             return array(
