@@ -345,6 +345,15 @@ class Issue extends AbstractRequest
         }
     }
 
+    /**
+     * 
+     * @param type $jql
+     * @param type $includedFields
+     * @param type $expandFields
+     * @param type $maxResults
+     * @param type $startAt
+     * @return ResourcesList
+     */
     public function search($jql, $includedFields = null, $expandFields = false, $maxResults = null, $startAt = null)
     {
         $params = array(
