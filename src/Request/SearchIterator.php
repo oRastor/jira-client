@@ -1,6 +1,6 @@
 <?php
 
-namespace JiraClient\Resource;
+namespace JiraClient\Request;
 
 use JiraClient\JiraClient;
 
