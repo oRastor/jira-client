@@ -450,8 +450,6 @@ class Issue extends AbstractResource
 
     protected function deserialize($data)
     {
-        $metadata = $this->getMetadata();
-
         //process custom fields
         foreach ($data['fields'] as $key => $value) {
             if (strpos($key, Field::CUSTOM_PREFIX) !== 0) {
