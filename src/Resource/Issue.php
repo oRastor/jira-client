@@ -100,6 +100,12 @@ class Issue extends AbstractResource
 
     /**
      *
+     * @var array
+     */
+    protected $fixVersions;
+    
+    /**
+     *
      * @var ResourcesList
      */
     protected $comments;
@@ -292,6 +298,15 @@ class Issue extends AbstractResource
     {
         return $this->attachments;
     }
+    
+    /**
+     * 
+     * @return Version[]
+     */
+    public function getFixVersions()
+    {
+        return $this->fixVersions;
+    }
 
     /**
      * 
@@ -399,6 +414,10 @@ class Issue extends AbstractResource
                     '_type' => 'array',
                     '_itemType' => 'attachment',
                     '_property' => 'attachments'
+                ),
+                'fixVersions' => array(
+                    '_type' => 'array',
+                    '_itemType' => 'version'
                 ),
                 'priority' => array(
                     '_type' => 'priority'

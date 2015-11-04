@@ -149,6 +149,10 @@ class AbstractResource
         if ($type == 'attachment') {
             return new Attachment($client, $data);
         }
+        
+        if ($type == 'version') {
+            return new Version($client, $data);
+        }
 
         if ($type == 'priority') {
             return new Priority($client, $data);
