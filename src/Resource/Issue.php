@@ -494,7 +494,11 @@ class Issue extends AbstractResource
                     $this->customFields[$id] = self::deserializeArrayValue($schema->getItems(), $value, $this->client);
                 }
             } else {
-                $this->customFields[$id] = self::deserializeValue($schema->getType(), $value, $this->client, $schema->getCustom());
+                if ($schema->getCustom() == 'com.pyxis.greenhopper.jira:gh-epic-link') {
+                    $this->customFields[$id] = self::deserializeValue('epiclink', $value, $this->client);
+                } else {
+                    $this->customFields[$id] = self::deserializeValue($schema->getType(), $value, $this->client, $schema->getCustom());
+                }
             }
         }
     }
