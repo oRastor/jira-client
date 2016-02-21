@@ -190,6 +190,10 @@ class AbstractResource
             return new CustomFieldNestedValue($client, $data);
         }
 
+        if ($type == 'epiclink') {
+            return $data;
+        }
+
         return null;
     }
 
