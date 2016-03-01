@@ -148,6 +148,12 @@ class Issue extends AbstractResource
 
     /**
      *
+     * @var integer
+     */
+    protected $timeoriginalestimate;
+
+    /**
+     *
      * @var array
      */
     protected $customFields = array();
@@ -367,6 +373,15 @@ class Issue extends AbstractResource
         return $this->updated;
     }
 
+    /**
+     *
+     * @return integer
+     */
+    public function getTimeoriginalestimate()
+    {
+        return $this->timeoriginalestimate;
+    }
+
     public function getObjectMappings()
     {
         return array(
@@ -443,6 +458,9 @@ class Issue extends AbstractResource
                 ),
                 'updated' => array(
                     '_type' => 'date'
+                ),
+                'timeoriginalestimate' => array(
+                    '_type' => 'integer'
                 )
             )
         );
