@@ -100,7 +100,7 @@ class IssueType extends AbstractResource
      */
     public function getSubtask()
     {
-        return $this->active;
+        return $this->subtask;
     }
 
     public function getObjectMappings()
