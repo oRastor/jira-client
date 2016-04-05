@@ -31,13 +31,14 @@ class Field
     const ASSIGNEE = 'assigne';
     const DESCRIPTION = 'description';
     const CUSTOM_PREFIX = 'customfield_';
+    const OPTION = 'option';
 
     private static function getSaveArrayValue($name, $value, $metadata)
     {
         $result = array();
 
         $itemsType = $metadata[$name]->getSchema()->getItems();
-        
+
         foreach ($value as $item) {
             $operation = null;
             $realValue = null;
@@ -54,7 +55,7 @@ class Field
             } else {
                 $realValue = $item;
             }
-            
+
             if (in_array($itemsType, array(self::COMPONENT, self::GROUP, self::USER, self::VERSION))) {
                 $realResult = array(
                     'name' => $realValue
@@ -68,7 +69,7 @@ class Field
                     $realResult = (string) $realValue;
                 }
             }
-            
+
             if ($operation !== null) {
                 array_push($result, array(
                     $operation => $realResult
@@ -92,7 +93,7 @@ class Field
         }
 
         $type = $metadata[$name]->getSchema()->getType();
-        
+
         if ($type == self::STRING) {
             if ($value == null) {
                 $value = '';
@@ -115,11 +116,11 @@ class Field
             if (!is_array($value)) {
                 throw new JiraException("Field expects an array value");
             }
-            
+
             if ($metadata[$name]->getSchema()->getCustom() == 'com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect') {
                 return $value;
             }
-            
+
             return self::getSaveArrayValue($name, $value, $metadata);
         } else if (in_array($type, array(self::ISSUE_TYPE, self::PRIORITY, self::USER))) {
             return array(
@@ -135,6 +136,15 @@ class Field
             }
 
             return $value->format('Y-m-d');
+        } else if ($type == self::OPTION) {
+            /** @var FieldMetadata $fieldMetadata */
+            $fieldMetadata = $metadata[$name];
+            /** @var CustomFieldOption $customField */
+            foreach ($fieldMetadata->getAllowedValues() as $customField) {
+                if (strtolower($customField->getValue()) === strtolower($value)) {
+                    return ['value' => $customField->getValue()];
+                }
+            }
         }
 
         throw new JiraException("Field type '{$type}' not supported");
@@ -155,7 +165,7 @@ class Field
 
     /**
      * Returns a full representation of the Custom Field Option that has the given id.
-     * 
+     *
      * @param JiraClient $client
      * @param int $id
      * @return \JiraClient\Resource\CustomFieldOption
