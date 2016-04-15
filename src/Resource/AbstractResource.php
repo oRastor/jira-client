@@ -106,6 +106,10 @@ class AbstractResource
             return $data;
         }
 
+        if ($type == 'number') {
+            return $data;
+        }
+
         if ($type == 'assoc') {
             return $data;
         }
