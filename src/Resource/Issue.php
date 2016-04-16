@@ -52,12 +52,6 @@ class Issue extends AbstractResource
 
     /**
      *
-     * @var Status
-     */
-    protected $status;
-
-    /**
-     *
      * @var User
      */
     protected $creator;
@@ -100,12 +94,6 @@ class Issue extends AbstractResource
 
     /**
      *
-     * @var array
-     */
-    protected $fixVersions;
-    
-    /**
-     *
      * @var ResourcesList
      */
     protected $comments;
@@ -145,12 +133,6 @@ class Issue extends AbstractResource
      * @var \DateTime
      */
     protected $updated;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $timeoriginalestimate;
 
     /**
      *
@@ -235,15 +217,6 @@ class Issue extends AbstractResource
 
     /**
      * 
-     * @return Status
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * 
      * @return User
      */
     public function getCreator()
@@ -303,15 +276,6 @@ class Issue extends AbstractResource
     public function getAttachments()
     {
         return $this->attachments;
-    }
-    
-    /**
-     * 
-     * @return Version[]
-     */
-    public function getFixVersions()
-    {
-        return $this->fixVersions;
     }
 
     /**
@@ -373,20 +337,14 @@ class Issue extends AbstractResource
         return $this->updated;
     }
 
-    /**
-     *
-     * @return integer
-     */
-    public function getTimeoriginalestimate()
-    {
-        return $this->timeoriginalestimate;
-    }
-
     public function getObjectMappings()
     {
         return array(
             'id' => array(
                 '_type' => 'integer'
+            ),
+            'self' => array(
+                '_type' => 'string'
             ),
             'key' => array(
                 '_type' => 'string'
@@ -501,7 +459,7 @@ class Issue extends AbstractResource
                 $this->customFields[$id] = $value;
                 continue;
             }
-            
+
             $schema = $metadata->getSchema();
             if ($schema->getType() === Field::ARRAY_TYPE) {
                 if ($schema->getCustom() == 'com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect') {
@@ -521,6 +479,9 @@ class Issue extends AbstractResource
         }
     }
 
+    /**
+     * @return array
+     */
     public function getCustomFieldsNames()
     {
         $metadata = $this->getMetadata();
@@ -528,7 +489,9 @@ class Issue extends AbstractResource
         $result = array();
 
         foreach (array_keys($this->customFields) as $id) {
-            $result[$id] = $metadata[Field::CUSTOM_PREFIX . $id]->getName();
+            if (isset($metadata[Field::CUSTOM_PREFIX . $id])) {
+                $result[$id] = $metadata[Field::CUSTOM_PREFIX . $id]->getName();
+            }
         }
 
         return $result;
@@ -539,7 +502,7 @@ class Issue extends AbstractResource
         if (!isset($this->customFields[$id])) {
             return null;
         }
-        
+
         return $this->customFields[$id];
     }
 
