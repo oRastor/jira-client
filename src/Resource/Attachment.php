@@ -97,7 +97,7 @@ class Attachment extends AbstractResource
      */
     public function getAuthor()
     {
-        return $this->getAuthor();
+        return $this->author();
     }
 
     /**
