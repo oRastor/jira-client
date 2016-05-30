@@ -15,7 +15,7 @@ class AbstractResource
 
     /**
      *
-     * @var JiraClient 
+     * @var JiraClient
      */
     protected $client;
 
@@ -36,12 +36,12 @@ class AbstractResource
     }
 
     private function mappingDeserialize($mapping, $data)
-    {   
+    {
         foreach ($mapping as $key => $value) {
             if (!isset($data[$key])) {
                 $data[$key] = null;
             }
-            
+
             if (isset($value['_type'])) {
                 $propertyName = isset($value['_property']) ? $value['_property'] : $key;
 
@@ -60,7 +60,7 @@ class AbstractResource
 
     protected function deserialize($data)
     {
-        
+
     }
 
     public static function deserializeArrayValue($type, $data, $client)
@@ -79,7 +79,7 @@ class AbstractResource
     }
 
     /**
-     * 
+     *
      * @param type $type
      * @param type $key
      * @param type $data
@@ -122,7 +122,7 @@ class AbstractResource
             if ($data === null) {
                 return null;
             }
-            
+
             return new \DateTime($data);
         }
 
@@ -153,7 +153,7 @@ class AbstractResource
         if ($type == 'attachment') {
             return new Attachment($client, $data);
         }
-        
+
         if ($type == 'version') {
             return new Version($client, $data);
         }
@@ -165,15 +165,15 @@ class AbstractResource
         if ($type == 'issuetype') {
             return new IssueType($client, $data);
         }
-        
+
         if ($type == 'status') {
             return new Status($client, $data);
         }
-        
+
         if ($type == 'statusCategory') {
             return new StatusCategory($client, $data);
         }
-        
+
         if ($type == 'transition') {
             return new Transition($client, $data);
         }
@@ -185,18 +185,22 @@ class AbstractResource
         if ($type == 'votes') {
             return new Votes($client, $data);
         }
-        
+
         if ($type == 'customFieldNestedValue') {
             if ($data === null) {
                 return null;
             }
-            
+
             return new CustomFieldNestedValue($client, $data);
         }
 
         if ($type == 'epiclink') {
             return $data;
         }
+
+	if ($type == 'option' && isset($data['value'])) {
+		return $data['value'];
+	}
 
         return null;
     }
@@ -207,7 +211,7 @@ class AbstractResource
     }
 
     /**
-     * 
+     *
      * @return JiraClient
      */
     public function getClient()
