@@ -11,8 +11,7 @@ use JiraClient\JiraClient,
  *
  * @author rastor
  */
-class Issue extends AbstractResource
-{
+class Issue extends AbstractResource {
 
     /**
      *
@@ -52,9 +51,21 @@ class Issue extends AbstractResource
 
     /**
      *
+     * @var Status
+     */
+    protected $status;
+
+    /**
+     *
      * @var User
      */
     protected $creator;
+
+    /**
+     *
+     * @var array
+     */
+    protected $fixVersions;
 
     /**
      *
@@ -97,6 +108,12 @@ class Issue extends AbstractResource
      * @var ResourcesList
      */
     protected $comments;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $timeoriginalestimate;
 
     /**
      *
@@ -163,8 +180,7 @@ class Issue extends AbstractResource
      * @return string
      *
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -173,8 +189,7 @@ class Issue extends AbstractResource
      * @return string
      *
      */
-    public function getSelf()
-    {
+    public function getSelf() {
         return $this->self;
     }
 
@@ -183,8 +198,7 @@ class Issue extends AbstractResource
      * @return string
      *
      */
-    public function getKey()
-    {
+    public function getKey() {
         return $this->key;
     }
 
@@ -192,8 +206,7 @@ class Issue extends AbstractResource
      * 
      * @return string
      */
-    public function getSummary()
-    {
+    public function getSummary() {
         return $this->summary;
     }
 
@@ -201,8 +214,7 @@ class Issue extends AbstractResource
      * 
      * @return string
      */
-    public function getDescription()
-    {
+    public function getDescription() {
         return $this->description;
     }
 
@@ -210,17 +222,23 @@ class Issue extends AbstractResource
      * 
      * @return IssueType
      */
-    public function getIssueType()
-    {
+    public function getIssueType() {
         return $this->issueType;
+    }
+
+    /**
+     * 
+     * @return Status
+     */
+    public function getStatus() {
+        return $this->status;
     }
 
     /**
      * 
      * @return User
      */
-    public function getCreator()
-    {
+    public function getCreator() {
         return $this->creator;
     }
 
@@ -228,8 +246,7 @@ class Issue extends AbstractResource
      * 
      * @return User
      */
-    public function getReporter()
-    {
+    public function getReporter() {
         return $this->reporter;
     }
 
@@ -237,8 +254,7 @@ class Issue extends AbstractResource
      * 
      * @return User
      */
-    public function getAssignee()
-    {
+    public function getAssignee() {
         return $this->assignee;
     }
 
@@ -246,8 +262,7 @@ class Issue extends AbstractResource
      * 
      * @return Watches
      */
-    public function getWatches()
-    {
+    public function getWatches() {
         return $this->watches;
     }
 
@@ -255,8 +270,7 @@ class Issue extends AbstractResource
      * 
      * @return Project
      */
-    public function getProject()
-    {
+    public function getProject() {
         return $this->project;
     }
 
@@ -264,8 +278,7 @@ class Issue extends AbstractResource
      * 
      * @return array
      */
-    public function getLabels()
-    {
+    public function getLabels() {
         return $this->labels;
     }
 
@@ -273,17 +286,23 @@ class Issue extends AbstractResource
      * 
      * @return array
      */
-    public function getAttachments()
-    {
+    public function getAttachments() {
         return $this->attachments;
+    }
+
+    /**
+     * 
+     * @return Version[]
+     */
+    public function getFixVersions() {
+        return $this->fixVersions;
     }
 
     /**
      * 
      * @return ResourcesList
      */
-    public function getComments()
-    {
+    public function getComments() {
         return $this->comments;
     }
 
@@ -291,8 +310,7 @@ class Issue extends AbstractResource
      * 
      * @return Priority
      */
-    public function getPriority()
-    {
+    public function getPriority() {
         return $this->priority;
     }
 
@@ -300,13 +318,11 @@ class Issue extends AbstractResource
      * 
      * @return Votes
      */
-    public function getVotes()
-    {
+    public function getVotes() {
         return $this->votes;
     }
 
-    public function getDueDate()
-    {
+    public function getDueDate() {
         return $this->dueDate;
     }
 
@@ -314,8 +330,7 @@ class Issue extends AbstractResource
      * 
      * @return \DateTime
      */
-    public function getLastViewed()
-    {
+    public function getLastViewed() {
         return $this->lastViewed;
     }
 
@@ -323,8 +338,7 @@ class Issue extends AbstractResource
      * 
      * @return \DateTime
      */
-    public function getCreated()
-    {
+    public function getCreated() {
         return $this->created;
     }
 
@@ -332,13 +346,19 @@ class Issue extends AbstractResource
      * 
      * @return \DateTime
      */
-    public function getUpdated()
-    {
+    public function getUpdated() {
         return $this->updated;
     }
 
-    public function getObjectMappings()
-    {
+    /**
+     *
+     * @return integer
+     */
+    public function getTimeOriginalEstimate() {
+        return $this->timeoriginalestimate;
+    }
+
+    public function getObjectMappings() {
         return array(
             'id' => array(
                 '_type' => 'integer'
@@ -424,8 +444,7 @@ class Issue extends AbstractResource
         );
     }
 
-    private function getMetadata()
-    {
+    private function getMetadata() {
         if ($this->totalMetadata !== null) {
             return $this->totalMetadata;
         }
@@ -443,8 +462,7 @@ class Issue extends AbstractResource
         return $this->totalMetadata;
     }
 
-    protected function deserialize($data)
-    {
+    protected function deserialize($data) {
         //process custom fields
         foreach ($data['fields'] as $key => $value) {
             if (strpos($key, Field::CUSTOM_PREFIX) !== 0) {
@@ -482,8 +500,7 @@ class Issue extends AbstractResource
     /**
      * @return array
      */
-    public function getCustomFieldsNames()
-    {
+    public function getCustomFieldsNames() {
         $metadata = $this->getMetadata();
 
         $result = array();
@@ -497,8 +514,7 @@ class Issue extends AbstractResource
         return $result;
     }
 
-    public function getCustomField($id)
-    {
+    public function getCustomField($id) {
         if (!isset($this->customFields[$id])) {
             return null;
         }
@@ -511,8 +527,7 @@ class Issue extends AbstractResource
      * @param string $name
      * @return FieldMetadata | boolean
      */
-    public function getFieldMetadata($name)
-    {
+    public function getFieldMetadata($name) {
         $metadata = $this->getMetadata();
 
         if (!isset($metadata[$name])) {
@@ -527,13 +542,11 @@ class Issue extends AbstractResource
      * @param int $id
      * @return FieldMetadata | boolean
      */
-    public function getCustomFieldMetadata($id)
-    {
+    public function getCustomFieldMetadata($id) {
         return $this->getFieldMetadata(Field::CUSTOM_PREFIX . $id);
     }
 
-    public function getCustomFieldType($id)
-    {
+    public function getCustomFieldType($id) {
         $metadata = $this->getMetadata();
 
         if (!isset($metadata[Field::CUSTOM_PREFIX . $id])) {
@@ -543,8 +556,7 @@ class Issue extends AbstractResource
         return $metadata[Field::CUSTOM_PREFIX . $id]->getSchema()->getType();
     }
 
-    public function getCustomFieldAllowedValues($id)
-    {
+    public function getCustomFieldAllowedValues($id) {
         $metadata = $this->getMetadata();
 
         if (!isset($metadata[Field::CUSTOM_PREFIX . $id])) {
@@ -554,8 +566,7 @@ class Issue extends AbstractResource
         return $metadata[Field::CUSTOM_PREFIX . $id]->getAllowedValues();
     }
 
-    public function update()
-    {
+    public function update() {
         if ($this->editMetadata === null) {
             $this->editMetadata = $this->client->issue()->getEditMetadataFields($this->getKey());
         }
@@ -563,18 +574,15 @@ class Issue extends AbstractResource
         return new FluentIssueUpdate($this, $this->editMetadata);
     }
 
-    public function transition()
-    {
+    public function transition() {
         return new FluentIssueTransition($this);
     }
 
-    public function refresh()
-    {
+    public function refresh() {
         
     }
 
-    public function addComment($body, $visibilityType = null, $visibilityName = null)
-    {
+    public function addComment($body, $visibilityType = null, $visibilityName = null) {
         $this->client->issue()->addComment($this->getId(), $body, $visibilityType, $visibilityName);
 
         return $this;
