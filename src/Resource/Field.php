@@ -32,6 +32,7 @@ class Field
     const DESCRIPTION = 'description';
     const CUSTOM_PREFIX = 'customfield_';
     const OPTION = 'option';
+    const OPTION_WITH_CHILD = 'option-with-child';
 
     private static function getSaveArrayValue($name, $value, $metadata)
     {

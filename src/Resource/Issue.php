@@ -479,7 +479,7 @@ class Issue extends AbstractResource {
             }
 
             $schema = $metadata->getSchema();
-            if ($schema->getType() === Field::ARRAY_TYPE) {
+            if ($schema->getType() === Field::ARRAY_TYPE || $schema->getType() === Field::OPTION_WITH_CHILD) {
                 if ($schema->getCustom() == 'com.atlassian.jira.plugin.system.customfieldtypes:cascadingselect') {
                     $this->customFields[$id] = self::deserializeValue('customFieldNestedValue', $value, $this->client);
                 } elseif ($schema->getCustom() == 'com.atlassian.jira.plugin.system.customfieldtypes:multicheckboxes') {
