@@ -142,6 +142,10 @@ class AbstractResource
             return new Comment($client, $data);
         }
 
+        if ($type == 'worklog') {
+            return new Worklog($client, $data);
+        }
+
         if ($type == 'user') {
             return new User($client, $data);
         }

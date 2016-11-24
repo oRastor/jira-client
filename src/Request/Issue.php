@@ -9,7 +9,8 @@ use JiraClient\JiraClient,
     JiraClient\Resource\ResourcesList,
     JiraClient\Resource\FieldMetadata,
     JiraClient\Resource\Comment,
-    JiraClient\Resource\FluentIssueCreate;
+    JiraClient\Resource\FluentIssueCreate,
+    JiraClient\Resource\Worklog;
 
 /**
  * Description of Issue
@@ -292,24 +293,93 @@ class Issue extends AbstractRequest
         }
     }
 
-    public function getWorklog()
+    public function getWorklogs($issue)
     {
-        
+        $path = "/issue/{$issue}/worklog";
+
+        try {
+            $data = $this->client->callGet($path)->getData();
+            return AbstractResource::deserializeListValue('worklog', 'worklogs', $data, $this->client);
+
+        } catch (\Exception $e) {
+            throw new JiraException("Failed to retrieve worklogs for issue '{$issue}'", $e);
+        }
     }
 
-    public function addWorklog()
+    public function getWorklog($issue, $worklogId)
     {
-        
+        $path = "/issue/{$issue}/worklog/{$worklogId}";
+
+        try {
+            return new Worklog($this->client, $this->client->callGet($path)->getData());
+        } catch (\Exception $e) {
+            throw new JiraException("Failed to retrieve worklog '{$worklogId} for issue {$issue}'", $e);
+        }
     }
 
-    public function updateWorklog()
+    public function addWorklog($issue, $comment, \DateTime $started, $timeSpentInSeconds, $visibilityType = null, $visibilityName = null, $expand = false)
     {
-        
+        $path = "/issue/{$issue}/worklog" . ($expand ? '?expand' : '');
+
+        $data = array(
+            'comment' => $comment,
+            'started' => $started->format('Y-m-d\TH:i:s.000O'),
+            'timeSpentSeconds' => $timeSpentInSeconds,
+        );
+
+        if ($visibilityType !== null && $visibilityName !== null) {
+            $data['visibility'] = array(
+                'type' => $visibilityType,
+                'value' => $visibilityName
+            );
+        }
+
+        try {
+            $result = $this->client->callPost($path, $data);
+
+            return new Worklog($this->client, $result->getData());
+        } catch (Exception $e) {
+            throw new JiraException("Failed to add worklog", $e);
+        }
     }
 
-    public function deleteWorklog()
+    public function updateWorklog($issue, $worklogId, $comment = null, $started = null, $timeSpentInSeconds = null, $visibilityType = null, $visibilityName = null, $expand = false)
     {
-        
+        $path = "/issue/{$issue}/worklog/{$worklogId}" . ($expand ? '?expand' : '');
+
+        $data = array_filter(array(
+            'comment' => $comment,
+            'started' => ($started instanceof \DateTime) ? $started->format('Y-m-d\TH:i:s.000O') : null,
+            'timeSpentSeconds' => $timeSpentInSeconds,
+        ), function($i){
+            return !is_null($i);
+        });
+
+        if ($visibilityType !== null && $visibilityName !== null) {
+            $data['visibility'] = array(
+                'type' => $visibilityType,
+                'value' => $visibilityName
+            );
+        }
+
+        try {
+            $result = $this->client->callPut($path, $data);
+
+            return new Worklog($this->client, $result->getData());
+        } catch (Exception $e) {
+            throw new JiraException("Failed to update worklog", $e);
+        }
+    }
+
+    public function deleteWorklog($issue, $worklog)
+    {
+        $path = "/issue/{$issue}/worklog/{$worklog}";
+
+        try {
+            $this->client->callDelete($path);
+        } catch (Exception $e) {
+            throw new JiraException("Failed to delete worklog '{$worklog}' for issue '{$issue}'", $e);
+        }
     }
 
     public function getCreateMetadata($projectIds = null, $projectKeys = null, $issueTypeIds = null, $issuetypeNames = null, $expandFields = true)
