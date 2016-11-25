@@ -107,6 +107,87 @@ class Worklog extends AbstractResource
         );
     }
 
+    /**
+     * @return string
+     */
+    public function getSelf()
+    {
+        return $this->self;
+    }
+
+    /**
+     * @return AuthorResource
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * @return AuthorResource
+     */
+    public function getUpdateAuthor()
+    {
+        return $this->updateAuthor;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getStarted()
+    {
+        return $this->started;
+    }
+
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIssueId()
+    {
+        return $this->issueId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTimeSpent()
+    {
+        return $this->timeSpent;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTimeSpentSeconds()
+    {
+        return $this->timeSpentSeconds;
+    }
+
+
     public function getSaveData()
     {
         $data = array(
