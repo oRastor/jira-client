@@ -2,6 +2,7 @@
 
 namespace JiraClient\Request;
 
+use Exception;
 use JiraClient\JiraClient,
     JiraClient\Exception\JiraException,
     JiraClient\Resource\Field,
@@ -103,7 +104,7 @@ class Issue extends AbstractRequest
         try {
             $result = $this->client->callGet($path);
 
-            return AbstractResource::deserializeListValue(AbstractResource::COMMENT, 'comments', $result->getData(), $this->client);
+            return AbstractResource::deserializeListValue('comment', 'comments', $result->getData(), $this->client);
         } catch (Exception $e) {
             throw new JiraException("Failed to get issue '{$issue}' commens", $e);
         }
