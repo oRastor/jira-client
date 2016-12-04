@@ -80,9 +80,9 @@ class AbstractResource
 
     /**
      *
-     * @param type $type
-     * @param type $key
-     * @param type $data
+     * @param string $type
+     * @param string $key
+     * @param array $data
      * @return \JiraClient\Resource\ResourcesList
      */
     public static function deserializeListValue($type, $key, $data, $client)
