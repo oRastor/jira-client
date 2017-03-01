@@ -30,6 +30,7 @@ class Field
     const DUE_DATE = 'duedate';
     const ASSIGNEE = 'assigne';
     const DESCRIPTION = 'description';
+    const REPORTER = 'reporter';
     const CUSTOM_PREFIX = 'customfield_';
     const OPTION = 'option';
     const OPTION_WITH_CHILD = 'option-with-child';
