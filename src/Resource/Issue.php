@@ -574,6 +574,10 @@ class Issue extends AbstractResource {
         return new FluentIssueUpdate($this, $this->editMetadata);
     }
 
+    public function delete() {
+        return new FluentIssueDelete($this);
+    }
+
     public function transition() {
         return new FluentIssueTransition($this);
     }
