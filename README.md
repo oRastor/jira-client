@@ -1,6 +1,8 @@
 # JIRA Client
 A simple JIRA REST client for PHP.
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f2cdc120e5cc47018790e84e9e7330e0)](https://www.codacy.com/app/doom4eg/jira-client?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=oRastor/jira-client&amp;utm_campaign=Badge_Grade)
+
 ## Example
 
 ```php
