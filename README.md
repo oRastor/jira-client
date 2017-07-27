@@ -55,7 +55,14 @@ try {
 
     // Executing transitions to change issue status
     $newIssue->transition()->execute(120);
-
+    
+    // Searches for issues using JQL
+    $issues = new JiraClient\Request\SearchIterator($api, "project = Test");
+    foreach ($issues as $issue) {
+        $issue->update()
+            ->fieldAdd(Field::LABELS, 'new-label')
+            ->execute();
+    }
 } catch (\JiraClient\Exception\JiraException $e) {
     // exception processing
 }
