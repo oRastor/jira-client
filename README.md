@@ -58,6 +58,13 @@ try {
     
     // Searches for issues using JQL
     $issues = new JiraClient\Request\SearchIterator($api, "project = Test");
+
+    // or another way
+    $issues = $api->issue()->search("project = Test");
+
+    // Total count of found issues
+    $total = $issues->getTotal();
+
     foreach ($issues as $issue) {
         $issue->update()
             ->fieldAdd(Field::LABELS, 'new-label')

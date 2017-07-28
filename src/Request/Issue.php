@@ -423,36 +423,11 @@ class Issue extends AbstractRequest
      * @param type $expandFields
      * @param type $maxResults
      * @param type $startAt
-     * @return ResourcesList
+     * @return SearchIterator
      */
-    public function search($jql, $includedFields = null, $expandFields = false, $maxResults = null, $startAt = null)
+    public function search($jql, $includedFields = null, $expandFields = false, $fetchSize = 100)
     {
-        $params = array(
-            'jql' => $jql
-        );
-
-        if ($includedFields !== null) {
-            $params['fields'] = $includedFields;
-        }
-
-        if ($expandFields) {
-            $params['expand'] = '';
-        }
-
-        if ($maxResults !== null) {
-            $params['maxResults'] = $maxResults;
-        }
-
-        if ($startAt !== null) {
-            $params['startAt'] = $startAt;
-        }
-
-        $path = "/search?" . http_build_query($params);
-
-        //try {
-        $data = $this->client->callGet($path)->getData();
-
-        return AbstractResource::deserializeListValue('issue', 'issues', $data, $this->client);
+        return new SearchIterator($this->client, $jql, $includedFields, $expandFields, $fetchSize);
     }
 
     /**
