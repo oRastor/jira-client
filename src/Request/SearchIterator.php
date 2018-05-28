@@ -3,7 +3,6 @@
 namespace JiraClient\Request;
 
 use JiraClient\JiraClient;
-use JiraClient\Resource\Issue;
 
 /**
  * Description of SearchIterator
