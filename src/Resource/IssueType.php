@@ -5,7 +5,7 @@ namespace JiraClient\Resource;
 /**
  * Description of IssueType
  *
- * @author rastor
+ * @author pbrasseur
  */
 class IssueType extends AbstractResource
 {

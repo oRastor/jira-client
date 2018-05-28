@@ -16,7 +16,7 @@ use JiraClient\JiraClient,
 /**
  * Description of Issue
  *
- * @author rastor
+ * @author pbrasseur
  */
 class Issue extends AbstractRequest
 {

@@ -5,7 +5,7 @@ namespace JiraClient\Resource;
 /**
  * Description of CustomFieldOption
  *
- * @author rastor
+ * @author pbrasseur
  */
 class CustomFieldOption extends AbstractResource
 {

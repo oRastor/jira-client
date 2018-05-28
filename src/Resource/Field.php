@@ -8,7 +8,7 @@ use JiraClient\JiraClient,
 /**
  * Description of Field
  *
- * @author rastor
+ * @author pbrasseur
  */
 class Field
 {

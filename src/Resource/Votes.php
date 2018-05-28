@@ -5,7 +5,7 @@ namespace JiraClient\Resource;
 /**
  * Description of Votes
  *
- * @author rastor
+ * @author pbrasseur
  */
 class Votes extends AbstractResource
 {

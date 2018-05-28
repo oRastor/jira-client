@@ -9,7 +9,7 @@ use JiraClient\JiraClient,
 /**
  * Description of FluentIssueCreate
  *
- * @author rastor
+ * @author pbrasseur
  */
 class FluentIssueDelete
 {

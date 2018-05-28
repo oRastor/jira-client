@@ -7,7 +7,7 @@ use JiraClient\JiraClient;
 /**
  * Description of AbstractRequest
  *
- * @author rastor
+ * @author pbrasseur
  */
 class AbstractRequest
 {

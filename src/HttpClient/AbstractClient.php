@@ -8,7 +8,7 @@ use JiraClient\Response,
 /**
  * Description of GuzzleClient
  *
- * @author rastor
+ * @author pbrasseur
  */
 abstract class AbstractClient
 {

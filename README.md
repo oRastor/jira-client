@@ -81,5 +81,5 @@ try {
 ## Installation
 
 ```sh
-composer require "rastor/jira-client:~0.4"
+composer require "pbrasseur/jira-client:~0.4"
 ```

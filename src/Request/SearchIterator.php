@@ -7,7 +7,7 @@ use JiraClient\JiraClient;
 /**
  * Description of SearchIterator
  *
- * @author rastor
+ * @author pbrasseur
  */
 class SearchIterator implements \Iterator {
 

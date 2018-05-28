@@ -8,7 +8,7 @@ use JiraClient\JiraClient,
 /**
  * Description of AbstractResource
  *
- * @author rastor
+ * @author pbrasseur
  */
 class AbstractResource
 {

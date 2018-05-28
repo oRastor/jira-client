@@ -8,7 +8,7 @@ use JiraClient\Resource\Issue,
 /**
  * Description of FluentIssueUpdate
  *
- * @author rastor
+ * @author pbrasseur
  */
 class FluentIssueUpdate
 {

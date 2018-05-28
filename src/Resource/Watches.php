@@ -5,7 +5,7 @@ namespace JiraClient\Resource;
 /**
  * Description of Watches
  *
- * @author rastor
+ * @author pbrasseur
  */
 class Watches extends AbstractResource
 {

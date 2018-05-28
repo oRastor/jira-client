@@ -5,7 +5,7 @@ namespace JiraClient;
 /**
  * Description of IssueUpdater
  *
- * @author rastor
+ * @author pbrasseur
  */
 class IssueUpdater
 {

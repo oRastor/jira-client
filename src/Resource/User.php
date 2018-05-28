@@ -5,7 +5,7 @@ namespace JiraClient\Resource;
 /**
  * Description of User
  *
- * @author rastor
+ * @author pbrasseur
  */
 class User extends AbstractResource
 {

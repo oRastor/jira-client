@@ -5,7 +5,7 @@ namespace JiraClient\Resource;
 /**
  * Description of CustomFieldNestedValue
  *
- * @author rastor
+ * @author pbrasseur
  */
 class CustomFieldNestedValue extends AbstractResource
 {
