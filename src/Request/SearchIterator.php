@@ -93,4 +93,7 @@ class SearchIterator implements \Iterator {
         return $this->total;
     }
 
+    public function getFetchedData() {
+        return $this->fetchedData;
+    }
 }

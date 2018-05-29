@@ -1,7 +1,7 @@
 {
     "name": "pbrasseur/jira-client",
     "type": "library",
-    "version": "0.5.0",
+    "version": "1.0",
     "description": "A simple PHP JIRA REST client",
     "keywords": ["jira", "rest", "api", "client"],
     "license": "MIT",
