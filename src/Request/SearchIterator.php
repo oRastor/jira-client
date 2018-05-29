@@ -3,12 +3,11 @@
 namespace JiraClient\Request;
 
 use JiraClient\JiraClient;
-use JiraClient\Resource\Issue;
 
 /**
  * Description of SearchIterator
  *
- * @author rastor
+ * @author pbrasseur
  */
 class SearchIterator implements \Iterator {
 
@@ -94,4 +93,7 @@ class SearchIterator implements \Iterator {
         return $this->total;
     }
 
+    public function getFetchedData() {
+        return $this->fetchedData;
+    }
 }

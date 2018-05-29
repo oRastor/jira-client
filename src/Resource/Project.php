@@ -5,7 +5,7 @@ namespace JiraClient\Resource;
 /**
  * Description of Project
  *
- * @author rastor
+ * @author pbrasseur
  */
 class Project extends AbstractResource
 {

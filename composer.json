@@ -1,7 +1,7 @@
 {
-    "name": "rastor/jira-client",
+    "name": "pbrasseur/jira-client",
     "type": "library",
-    "version": "0.4.0",
+    "version": "1.0",
     "description": "A simple PHP JIRA REST client",
     "keywords": ["jira", "rest", "api", "client"],
     "license": "MIT",
@@ -10,8 +10,8 @@
     },
     "authors": [
         {
-            "name": "Orest Budzhak",
-            "email": "doom4eg@gmail.com"
+            "name": "Pierre Brasseur",
+            "email": "pierre.brasseur@businessdecision.com"
         }
     ],
     "autoload": {

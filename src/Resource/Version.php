@@ -5,7 +5,7 @@ namespace JiraClient\Resource;
 /**
  * Description of Version
  *
- * @author rastor
+ * @author pbrasseur
  */
 class Version extends AbstractResource
 {

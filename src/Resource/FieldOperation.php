@@ -5,7 +5,7 @@ namespace JiraClient\Resource;
 /**
  * Description of FieldOperation
  *
- * @author rastor
+ * @author pbrasseur
  */
 class FieldOperation
 {

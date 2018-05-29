@@ -10,7 +10,7 @@ use GuzzleHttp\Client,
 /**
  * Description of GuzzleClient
  *
- * @author rastor
+ * @author pbrasseur
  */
 class GuzzleClient extends AbstractClient
 {

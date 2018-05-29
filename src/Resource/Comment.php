@@ -5,7 +5,7 @@ namespace JiraClient\Resource;
 /**
  * Description of Comment
  *
- * @author rastor
+ * @author pbrasseur
  */
 class Comment extends AbstractResource
 {

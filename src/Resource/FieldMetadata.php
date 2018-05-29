@@ -5,7 +5,7 @@ namespace JiraClient\Resource;
 /**
  * Description of FieldMetadata
  *
- * @author rastor
+ * @author pbrasseur
  */
 class FieldMetadata extends AbstractResource
 {

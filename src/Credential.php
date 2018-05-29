@@ -5,7 +5,7 @@ namespace JiraClient;
 /**
  * Description of Credential
  *
- * @author rastor
+ * @author pbrasseur
  */
 class Credential
 {

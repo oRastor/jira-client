@@ -5,7 +5,7 @@ namespace JiraClient\Resource;
 /**
  * Description of Attachment
  *
- * @author rastor
+ * @author pbrasseur
  */
 class Attachment extends AbstractResource
 {

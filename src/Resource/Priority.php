@@ -5,7 +5,7 @@ namespace JiraClient\Resource;
 /**
  * Description of Priority
  *
- * @author rastor
+ * @author pbrasseur
  */
 class Priority extends AbstractResource
 {

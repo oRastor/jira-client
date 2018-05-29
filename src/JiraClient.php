@@ -7,7 +7,7 @@ use JiraClient\Request\Issue;
 /**
  * Description of JiraClient
  *
- * @author rastor
+ * @author pbrasseur
  */
 class JiraClient
 {

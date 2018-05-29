@@ -5,7 +5,7 @@ namespace JiraClient\Resource;
 /**
  * Description of ResourcesList
  *
- * @author rastor
+ * @author pbrasseur
  */
 class ResourcesList
 {

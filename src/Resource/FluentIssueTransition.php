@@ -10,7 +10,7 @@ use JiraClient\Resource\Issue,
  * 
  * @todo Add posibility to update fields
  *
- * @author rastor
+ * @author pbrasseur
  */
 class FluentIssueTransition
 {

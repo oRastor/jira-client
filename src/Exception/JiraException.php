@@ -5,7 +5,7 @@ namespace JiraClient\Exception;
 /**
  * Description of JiraException
  *
- * @author rastor
+ * @author pbrasseur
  */
 class JiraException extends \RuntimeException
 {

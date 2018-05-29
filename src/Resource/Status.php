@@ -5,7 +5,7 @@ namespace JiraClient\Resource;
 /**
  * Description of Status
  *
- * @author rastor
+ * @author pbrasseur
  */
 class Status extends AbstractResource
 {

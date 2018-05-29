@@ -5,7 +5,7 @@ namespace JiraClient\Resource;
 /**
  * Description of StatusCategory
  *
- * @author rastor
+ * @author pbrasseur
  */
 class StatusCategory extends AbstractResource
 {

@@ -5,7 +5,7 @@ namespace JiraClient;
 /**
  * Description of Response
  *
- * @author rastor
+ * @author pbrasseur
  */
 class Response
 {

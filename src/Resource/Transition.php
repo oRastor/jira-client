@@ -5,7 +5,7 @@ namespace JiraClient\Resource;
 /**
  * Description of Transition
  *
- * @author rastor
+ * @author pbrasseur
  */
 class Transition extends AbstractResource
 {

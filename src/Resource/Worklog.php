@@ -5,7 +5,7 @@ namespace JiraClient\Resource;
 /**
  * Description of a Worklog
  *
- * @author rastor
+ * @author pbrasseur
  */
 class Worklog extends AbstractResource
 {
