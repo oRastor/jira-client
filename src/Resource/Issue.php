@@ -111,6 +111,12 @@ class Issue extends AbstractResource {
 
     /**
      *
+     * @var array
+     */
+    protected $components;
+
+    /**
+     *
      * @var integer
      */
     protected $timeoriginalestimate;
@@ -203,7 +209,7 @@ class Issue extends AbstractResource {
     }
 
     /**
-     * 
+     *
      * @return string
      */
     public function getSummary() {
@@ -211,7 +217,7 @@ class Issue extends AbstractResource {
     }
 
     /**
-     * 
+     *
      * @return string
      */
     public function getDescription() {
@@ -219,7 +225,7 @@ class Issue extends AbstractResource {
     }
 
     /**
-     * 
+     *
      * @return IssueType
      */
     public function getIssueType() {
@@ -227,7 +233,7 @@ class Issue extends AbstractResource {
     }
 
     /**
-     * 
+     *
      * @return Status
      */
     public function getStatus() {
@@ -235,7 +241,7 @@ class Issue extends AbstractResource {
     }
 
     /**
-     * 
+     *
      * @return User
      */
     public function getCreator() {
@@ -243,7 +249,7 @@ class Issue extends AbstractResource {
     }
 
     /**
-     * 
+     *
      * @return User
      */
     public function getReporter() {
@@ -251,7 +257,7 @@ class Issue extends AbstractResource {
     }
 
     /**
-     * 
+     *
      * @return User
      */
     public function getAssignee() {
@@ -259,7 +265,7 @@ class Issue extends AbstractResource {
     }
 
     /**
-     * 
+     *
      * @return Watches
      */
     public function getWatches() {
@@ -267,7 +273,7 @@ class Issue extends AbstractResource {
     }
 
     /**
-     * 
+     *
      * @return Project
      */
     public function getProject() {
@@ -275,7 +281,7 @@ class Issue extends AbstractResource {
     }
 
     /**
-     * 
+     *
      * @return array
      */
     public function getLabels() {
@@ -283,7 +289,7 @@ class Issue extends AbstractResource {
     }
 
     /**
-     * 
+     *
      * @return array
      */
     public function getAttachments() {
@@ -291,7 +297,7 @@ class Issue extends AbstractResource {
     }
 
     /**
-     * 
+     *
      * @return Version[]
      */
     public function getFixVersions() {
@@ -299,7 +305,7 @@ class Issue extends AbstractResource {
     }
 
     /**
-     * 
+     *
      * @return ResourcesList
      */
     public function getComments() {
@@ -307,7 +313,15 @@ class Issue extends AbstractResource {
     }
 
     /**
-     * 
+     *
+     * @return array
+     */
+    public function getComponents() {
+        return $this->components;
+    }
+
+    /**
+     *
      * @return Priority
      */
     public function getPriority() {
@@ -315,7 +329,7 @@ class Issue extends AbstractResource {
     }
 
     /**
-     * 
+     *
      * @return Votes
      */
     public function getVotes() {
@@ -327,7 +341,7 @@ class Issue extends AbstractResource {
     }
 
     /**
-     * 
+     *
      * @return \DateTime
      */
     public function getLastViewed() {
@@ -335,7 +349,7 @@ class Issue extends AbstractResource {
     }
 
     /**
-     * 
+     *
      * @return \DateTime
      */
     public function getCreated() {
@@ -343,7 +357,7 @@ class Issue extends AbstractResource {
     }
 
     /**
-     * 
+     *
      * @return \DateTime
      */
     public function getUpdated() {
@@ -423,6 +437,11 @@ class Issue extends AbstractResource {
                     '_itemType' => 'comment',
                     '_listKey' => 'comments',
                     '_property' => 'comments'
+                ),
+                'components' => array(
+                    '_type' => 'array',
+                    '_itemType' => 'string',
+                    '_property' => 'components'
                 ),
                 'duedate' => array(
                     '_type' => 'date',
@@ -523,7 +542,7 @@ class Issue extends AbstractResource {
     }
 
     /**
-     * 
+     *
      * @param string $name
      * @return FieldMetadata | boolean
      */
@@ -538,7 +557,7 @@ class Issue extends AbstractResource {
     }
 
     /**
-     * 
+     *
      * @param int $id
      * @return FieldMetadata | boolean
      */
@@ -583,7 +602,7 @@ class Issue extends AbstractResource {
     }
 
     public function refresh() {
-        
+
     }
 
     public function addComment($body, $visibilityType = null, $visibilityName = null) {
