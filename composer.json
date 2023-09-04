@@ -6,7 +6,7 @@
     "keywords": ["jira", "rest", "api", "client"],
     "license": "MIT",
     "require": {
-        "guzzlehttp/guzzle": "~5.0|~6.0"
+        "guzzlehttp/guzzle": "~5.0|~6.0|~7.0"
     },
     "authors": [
         {
